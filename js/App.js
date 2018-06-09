@@ -1,13 +1,5 @@
-import type {
-  NavigationScreenProp,
-  NavigationEventSubscription,
-} from 'react-navigation';
-
-import React from 'react';
-import { Platform, ScrollView, StatusBar, View, Image, StyleSheet} from 'react-native';
-import { SafeAreaView, createBottomTabNavigator } from 'react-navigation';
-import { Button } from './commonComponents/ButtonWithMargin';
-import SampleText from './commonComponents/SampleText';
+import { Platform } from 'react-native';
+import { createBottomTabNavigator } from 'react-navigation';
 import MyPolularScreen from './polular/MyPolularScreen';
 import MyTrendingScreen from './trending/MyTrendingScreen';
 import MyFavoriteScreen from './favorite/MyFavoriteScreen';
@@ -40,12 +32,7 @@ const MainTabs = createBottomTabNavigator(
     },
   }
 );
-const styles = StyleSheet.create({
-  tabbarIcon: {
-    width:25,
-    height:25
-  },
-});
+
 
 
 export default MainTabs;
