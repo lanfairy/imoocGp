@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
-import MyPolularScreen from './polular/MyPolularScreen';
+import MyPolularStack from './polular/MyPolularStack';
 import MyTrendingScreen from './trending/MyTrendingScreen';
 import MyFavoriteScreen from './favorite/MyFavoriteScreen';
 import MyMineScreen from './mine/MyMineScreen';
@@ -10,7 +10,7 @@ import MyMineScreen from './mine/MyMineScreen';
 const MainTabs = createBottomTabNavigator(
   {
     Polular: {
-      screen: MyPolularScreen,
+      screen: MyPolularStack,
       path: '',
     },
     Trending: {

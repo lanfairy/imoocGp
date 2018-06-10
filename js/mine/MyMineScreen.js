@@ -4,7 +4,7 @@ import type {
   NavigationScreenProp,
   NavigationEventSubscription,
 } from 'react-navigation';
-import MyNavScreen from '../commonComponents/MyNavScreen';
+import { MyNavScreen } from '../commonComponents/MyNavScreen';
 
 const MyMineScreen = ({ navigation }) => (
   <MyNavScreen banner="Mine Tab" navigation={navigation} />

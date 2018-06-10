@@ -1,26 +1,75 @@
 import React from 'react';
-import {  Image, StyleSheet} from 'react-native';
+import { View, Image, StyleSheet, Text, TextInput, Alert} from 'react-native';
 
-import MyNavScreen from '../commonComponents/MyNavScreen';
+import {MyNavScreen,CommonNavScreen} from '../commonComponents/MyNavScreen';
+import HttpUtils from '../utils/HttpUtils';
+// const MyPolularScreen = ({ navigation }) => (
+  // <MyNavScreen banner="polular Tab" navigation={navigation} />
+  // <CommonNavScreen navigation={navigation} children={<View></View>} />
+// );
 
-const MyPolularScreen = ({ navigation }) => (
-  <MyNavScreen banner="polular Tab" navigation={navigation} />
-);
-
-MyPolularScreen.navigationOptions = {
-  tabBarTestIDProps: {
-    testID: 'TEST_ID_POLULAR',
-    accessibilityLabel: 'TEST_ID_POLULAR_ACLBL',
-  },
-  tabBarLabel: '最热',
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Image source={require('../../res/images/ic_polular.png')} style={[{ tintColor: tintColor},styles.tabbarIcon]}/>
-  ),
+export default class MyPolularScreen extends React.Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      result: '',
+    }
+  }
+  _onLoad = ()=>{
+    let URL = `https://api.github.com/search/repositories?q=${this.text}&sort=stars`;
+    HttpUtils.get(URL)
+      .then((result)=>{
+        Alert.alert('result');
+        this.setState({
+          result: JSON.stringify(result),
+        })
+      })
+      .catch((error=>{
+        this.setState({
+          result: JSON.stringify(error),
+        })
+      }))
+  };
+  render(){
+    const { navigation } = this.props;
+    return (
+      <CommonNavScreen navigation={navigation}>
+      <View style={styles.container}>
+        <Text style={styles.tips}
+        onPress={this._onLoad}
+        >获取数据</Text>
+        <TextInput style={styles.textInput} onChangeText={text=>this.text=text}/>
+        <Text style={{height: 500,backgroundColor:'lightgray'}}>{this.state.result}</Text>
+      </View>
+      </CommonNavScreen>
+    )
+  }
+}
+MyPolularScreen.navigationOptions = props => {
+  const { navigation } = props;
+  const { state, setParams } = navigation;
+  const { params } = state;
+  return {
+    headerTitle: `最热`,
+    headerTintColor: '#FFF',
+    headerRight: (
+      null
+    ),
+    headerStyle: {
+      backgroundColor: '#6595ED',
+    }
+  };
 };
 const styles = StyleSheet.create({
-  tabbarIcon: {
-    width:25,
-    height:25
+  container: {
+    backgroundColor:'skyblue',
+    flex:1,
   },
+  tips: {
+    fontSize: 40,
+  },
+  textInput: {
+    height: 20,
+    backgroundColor: '#FFF',
+  }
 });
-export default MyPolularScreen;
