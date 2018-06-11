@@ -30,7 +30,7 @@ MyMineScreen.navigationOptions = props => {
       null
     ),
     headerStyle: {
-      backgroundColor: ThemeFlags.Indigo,
+      backgroundColor: ThemeFlags.LightGreen,
     }
   };
 };

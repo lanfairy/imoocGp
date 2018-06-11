@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, Image, StyleSheet} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MyMineScreen from './MyMineScreen';
-import { ThemeFlags } from '../config/ThemeConfig';
+import  { ThemeFlags } from '../config/ThemeConfig';
 
 const MyMineStack = createStackNavigator({
   MineHome: {
@@ -10,16 +10,18 @@ const MyMineStack = createStackNavigator({
   },
 
 });
+
 MyMineStack.navigationOptions = {
 
-    tabBarLabel: ({ tintColor, focused }) => {
-      let color = focused ? ThemeFlags.Indigo : tintColor;
-      return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>我的</Text>;
-    },
-    tabBarIcon: ({ tintColor, focused }) => {
-      let color = focused ? ThemeFlags.Indigo : tintColor;
+  tabBarLabel: ({ tintColor, focused }) => {
+    let color = focused ? ThemeFlags.LightGreen : tintColor;
+    return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>我的</Text>;
+  },
+  tabBarIcon: ({ tintColor, focused }) => {
+    let color = focused ? ThemeFlags.LightGreen : tintColor;
     return  <Image source={require('../../res/images/ic_my.png')} style={[{ tintColor: color},styles.tabbarIcon]}/>
-    },
+  },
+
 
 };
 

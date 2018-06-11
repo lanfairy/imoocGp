@@ -1,6 +1,6 @@
 'use strict'
- 
-
+import React from 'react';
+import { Text, Image, StyleSheet} from 'react-native';
 export const ThemeFlags = {
     Default:'#4caf50',
     Red: '#F44336',
@@ -25,3 +25,18 @@ export const ThemeFlags = {
     Black:'#000000',
     Polular: '#6595ED'
 }
+
+// export default class ThemeConfig {
+//   static getPageTheme(tabBarLabel, tabBarIcon, selectedColor){
+//     return {
+//       tabBarLabel: ({ tintColor, focused }) => {
+//         let color = focused ? selectedColor : tintColor;
+//         return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>{tabBarLabel}</Text>;
+//       },
+//       tabBarIcon: ({ tintColor, focused }) => {
+//         let color = focused ? selectedColor : tintColor;
+//       return  <Image source={{uri:tabBarIcon}} style={{ tintColor: color, width:25, height:25}}/>
+//       }
+//     }
+//   }
+// }
