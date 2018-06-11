@@ -1,8 +1,10 @@
 import React from 'react';
-import { View, Image, StyleSheet, Text, TextInput, Alert} from 'react-native';
+import { View, Image, StyleSheet, Text, TextInput, Alert, ListView} from 'react-native';
 
 import {MyNavScreen,CommonNavScreen} from '../commonComponents/MyNavScreen';
 import HttpUtils from '../utils/HttpUtils';
+import URLConfig from '../config/URLConfig';
+import {ThemeFlags} from '../config/ThemeConfig';
 // const MyPolularScreen = ({ navigation }) => (
   // <MyNavScreen banner="polular Tab" navigation={navigation} />
   // <CommonNavScreen navigation={navigation} children={<View></View>} />
@@ -16,10 +18,10 @@ export default class MyPolularScreen extends React.Component{
     }
   }
   _onLoad = ()=>{
-    let URL = `https://api.github.com/search/repositories?q=${this.text}&sort=stars`;
+    let URL = URLConfig.getSearchURL(this.text);
     HttpUtils.get(URL)
       .then((result)=>{
-        Alert.alert('result');
+        // Alert.alert('result');
         this.setState({
           result: JSON.stringify(result),
         })
@@ -56,7 +58,7 @@ MyPolularScreen.navigationOptions = props => {
       null
     ),
     headerStyle: {
-      backgroundColor: '#6595ED',
+      backgroundColor: ThemeFlags.Polular,
     }
   };
 };

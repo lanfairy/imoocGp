@@ -5,6 +5,7 @@ import type {
   NavigationEventSubscription,
 } from 'react-navigation';
 import { MyNavScreen } from '../commonComponents/MyNavScreen';
+import { ThemeFlags } from '../config/ThemeConfig';
 
 type MyFavoriteScreenProps = {
   navigation: NavigationScreenProp<*>,
@@ -15,12 +16,6 @@ class MyFavoriteScreen extends React.Component<MyFavoriteScreenProps> {
   _s2: NavigationEventSubscription;
   _s3: NavigationEventSubscription;
 
-  static navigationOptions = {
-    tabBarLabel: '收藏',
-    tabBarIcon: ({ tintColor, focused }) => (
-      <Image source={require('../../res/images/ic_favorite.png')} style={[{ tintColor: tintColor},styles.tabbarIcon]}/>
-    ),
-  };
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onEvent);
     this._s1 = this.props.navigation.addListener('didFocus', this._onEvent);
@@ -42,7 +37,21 @@ class MyFavoriteScreen extends React.Component<MyFavoriteScreenProps> {
   }
 }
 
-
+MyFavoriteScreen.navigationOptions = props => {
+  const { navigation } = props;
+  const { state, setParams } = navigation;
+  const { params } = state;
+  return {
+    headerTitle: `收藏`,
+    headerTintColor: '#FFF',
+    headerRight: (
+      null
+    ),
+    headerStyle: {
+      backgroundColor: ThemeFlags.Purple,
+    }
+  };
+};
 const styles = StyleSheet.create({
   tabbarIcon: {
     width:25,

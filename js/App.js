@@ -1,9 +1,9 @@
 import { Platform } from 'react-native';
 import { createBottomTabNavigator } from 'react-navigation';
 import MyPolularStack from './polular/MyPolularStack';
-import MyTrendingScreen from './trending/MyTrendingScreen';
-import MyFavoriteScreen from './favorite/MyFavoriteScreen';
-import MyMineScreen from './mine/MyMineScreen';
+import MyTrendingStack from './trending/MyTrendingStack';
+import MyFavoriteStack from './favorite/MyFavoriteStack';
+import MyMineStack from './mine/MyMineStack';
 
 
 
@@ -14,21 +14,21 @@ const MainTabs = createBottomTabNavigator(
       path: '',
     },
     Trending: {
-      screen: MyTrendingScreen,
+      screen: MyTrendingStack,
       path: 'trending',
     },
     Favorite: {
-      screen: MyFavoriteScreen,
+      screen: MyFavoriteStack,
       path: 'favorite',
     },
     Mine: {
-      screen: MyMineScreen,
+      screen: MyMineStack,
       path: 'mine',
     },
   },
   {
     tabBarOptions: {
-      activeTintColor: Platform.OS === 'ios' ? '#e91e63' : '#fff',
+      // activeTintColor: Platform.OS === 'ios' ? '#e91e63' : '#fff',
     },
   }
 );

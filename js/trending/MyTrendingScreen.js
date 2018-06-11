@@ -5,6 +5,7 @@ import type {
   NavigationEventSubscription,
 } from 'react-navigation';
 import { MyNavScreen } from '../commonComponents/MyNavScreen';
+import { ThemeFlags } from '../config/ThemeConfig';
 
 type MyTrendingScreenProps = {
   navigation: NavigationScreenProp<*>,
@@ -15,12 +16,7 @@ class MyTrendingScreen extends React.Component<MyTrendingScreenProps> {
   _s2: NavigationEventSubscription;
   _s3: NavigationEventSubscription;
 
-  static navigationOptions = {
-    tabBarLabel: '趋势',
-    tabBarIcon: ({ tintColor, focused }) => (
-      <Image source={require('../../res/images/ic_trending.png')} style={[{ tintColor: tintColor},styles.tabbarIcon]}/>
-    ),
-  };
+
   componentDidMount() {
     this._s0 = this.props.navigation.addListener('willFocus', this._onEvent);
     this._s1 = this.props.navigation.addListener('didFocus', this._onEvent);
@@ -41,7 +37,21 @@ class MyTrendingScreen extends React.Component<MyTrendingScreenProps> {
     return <MyNavScreen banner="Trending Tab" navigation={navigation} />;
   }
 }
-
+MyTrendingScreen.navigationOptions = props => {
+  const { navigation } = props;
+  const { state, setParams } = navigation;
+  const { params } = state;
+  return {
+    headerTitle: `趋势`,
+    headerTintColor: '#FFF',
+    headerRight: (
+      null
+    ),
+    headerStyle: {
+      backgroundColor: ThemeFlags.Pink,
+    }
+  };
+};
 const styles = StyleSheet.create({
   tabbarIcon: {
     width:25,

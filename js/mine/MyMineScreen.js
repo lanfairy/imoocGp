@@ -5,16 +5,34 @@ import type {
   NavigationEventSubscription,
 } from 'react-navigation';
 import { MyNavScreen } from '../commonComponents/MyNavScreen';
+import { ThemeFlags } from '../config/ThemeConfig';
 
-const MyMineScreen = ({ navigation }) => (
-  <MyNavScreen banner="Mine Tab" navigation={navigation} />
-);
+// const MyMineScreen = ({ navigation }) => (
+//   <MyNavScreen banner="Mine Tab" navigation={navigation} />
+// );
+class MyMineScreen extends React.Component{
+  render(){
+    const {navigation} = this.props;
+    return (
+      <MyNavScreen banner="Mine Tab" navigation={navigation} />
+    )
+  }
+}
 
-MyMineScreen.navigationOptions = {
-  tabBarLabel: '我的',
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Image source={require('../../res/images/ic_my.png')} style={[{ tintColor: tintColor},styles.tabbarIcon]}/>
-  ),
+MyMineScreen.navigationOptions = props => {
+  const { navigation } = props;
+  const { state, setParams } = navigation;
+  const { params } = state;
+  return {
+    headerTitle: `我的`,
+    headerTintColor: '#FFF',
+    headerRight: (
+      null
+    ),
+    headerStyle: {
+      backgroundColor: ThemeFlags.Indigo,
+    }
+  };
 };
 const styles = StyleSheet.create({
   tabbarIcon: {

@@ -1,7 +1,9 @@
 import React from 'react';
-import {  Image, StyleSheet} from 'react-native';
+import { Text, Image, StyleSheet} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MyPolularScreen from './MyPolularScreen';
+import {ThemeFlags} from '../config/ThemeConfig';
+
 const MyPolularStack = createStackNavigator({
   PolularHome: {
     screen: MyPolularScreen,
@@ -13,10 +15,15 @@ MyPolularStack.navigationOptions = {
     testID: 'TEST_ID_POLULAR',
     accessibilityLabel: 'TEST_ID_POLULAR_ACLBL',
   },
-  tabBarLabel: '最热',
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Image source={require('../../res/images/ic_polular.png')} style={[{ tintColor: tintColor},styles.tabbarIcon]}/>
-  ),
+  tabBarLabel: ({ tintColor, focused }) => {
+
+    let color = focused ? ThemeFlags.Polular : tintColor;
+    return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>最热</Text>;
+  },
+  tabBarIcon: ({ tintColor, focused }) => {
+    let color = focused ? ThemeFlags.Polular : tintColor;
+    return <Image source={require('../../res/images/ic_polular.png')} style={[{ tintColor: color},styles.tabbarIcon]}/>
+    },
 };
 const styles = StyleSheet.create({
   tabbarIcon: {
