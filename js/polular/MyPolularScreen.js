@@ -61,7 +61,7 @@ export default class MyPolularScreen extends React.Component{
         <Text>{rowData.description}</Text>
         <View>
           <Text></Text>
-          <Image source={{uri:rowData.avatar_url} style={{width: 30,height: 30}}} />
+          <Image source={{uri:rowData.owner.avatar_url} style={{width: 30,height: 30}}} />
         </View>
       </View>
     )
