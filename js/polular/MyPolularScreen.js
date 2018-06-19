@@ -1,5 +1,14 @@
 import React from 'react';
-import { View, Image, StyleSheet, Text, TextInput, Alert, ListView} from 'react-native';
+import {
+  View,
+  RefreshControl,
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  Alert,
+  ListView
+} from 'react-native';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view'
 
 import {MyNavScreen,CommonNavScreen} from '../commonComponents/MyNavScreen';
@@ -15,9 +24,12 @@ class PopularTab extends React.Component{
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       result: '',
+      isLoading: false,
+      isLoadingFail: false,
       dataSource: ds.cloneWithRows([]),
     }
   }
+
   render(){
     let content = <ListView
           ref='listView'
@@ -27,6 +39,15 @@ class PopularTab extends React.Component{
                 }}
                 enableEmptySections={true}
                 dataSource={this.state.dataSource}
+                refreshControl={
+                  <RefreshControl
+                      // title='拼命加载中...'
+                      refreshing={this.state.isLoading}
+                      onRefresh={this._onRefresh}
+                      tintColor={ThemeFlags.Polular}
+                      colors={[ThemeFlags.Polular,ThemeFlags.Polular,ThemeFlags.Polular]}
+                    />
+                }
       />;
     return (
       <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>
@@ -42,30 +63,41 @@ class PopularTab extends React.Component{
   //     <Image source={{uri:rowData.owner.avatar_url}} style={GlobalStyles.cell_img_owner_avatar} />
   //   </View>
   // </View>
+  componentDidMount(){
+    this._loadData(true);
+  }
   _renderRow = (rowData)=>{
     return(
       <RepositoryCell rowData={rowData}/>
     )
   };
-  componentDidMount(){
-    this._onLoad();
-  }
-  _onLoad = ()=>{
-    let URL = URLConfig.getSearchURL(this.props.TabText);
+  _onRefresh = ()=>{
+    this._loadData(true);
+  };
+  _loadData = (isRefresh)=>{
+    this.setState({
+      isLoading: true,
+    })
+    let URL = URLConfig.getSearchURL(this.props.tabLabel);
 
     HttpUtils.get(URL)
       .then((result)=>{
         // Alert.alert('result');
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(result.items),
+          isLoading: false,
+          isLoadingFail: false,
         })
       })
       .catch((error=>{
         this.setState({
           result: JSON.stringify(error),
+          isLoading: false,
+          isLoadingFail: true,
         })
       }))
   };
+
 }
 
 export default class MyPolularScreen extends React.Component{
@@ -103,8 +135,7 @@ export default class MyPolularScreen extends React.Component{
                 {this.state.languages.map((result, i, arr)=> {
                     let language = result;
                     return language &&
-                        <PopularTab key={i} TabText={language.name}
-                                    tabLabel={language.name}/>;
+                        <PopularTab key={i} tabLabel={language.name}/>;
                 })}
             </ScrollableTabView>
             : null;
