@@ -3,7 +3,7 @@
 import React from 'react';
 import {  StatusBar, View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
-
+// import Toast, {DURATION} from 'react-native-easy-toast';
 import { Button } from './ButtonWithMargin';
 import SampleText from './SampleText';
 

@@ -9,7 +9,8 @@ import {
   Alert,
   ListView
 } from 'react-native';
-import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view'
+import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
+import Toast, {DURATION} from 'react-native-easy-toast';
 
 import {MyNavScreen,CommonNavScreen} from '../commonComponents/MyNavScreen';
 import HttpUtils from '../utils/HttpUtils';
@@ -31,6 +32,16 @@ class PopularTab extends React.Component{
   }
 
   render(){
+    let toast = <Toast
+            ref="toast"
+            style={{backgroundColor:ThemeFlags.Polular}}
+            position='bottom'
+            positionValue={200}
+            fadeInDuration={750}
+            fadeOutDuration={1200}
+            opacity={0.95}
+            textStyle={{color:'#fff'}}
+        />;
     let content = <ListView
           ref='listView'
           renderRow={this._renderRow}
@@ -52,6 +63,7 @@ class PopularTab extends React.Component{
     return (
       <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>
         {content}
+        {toast}
       </View>
     );
   }
@@ -82,7 +94,8 @@ class PopularTab extends React.Component{
 
     HttpUtils.get(URL)
       .then((result)=>{
-        // Alert.alert('result');
+        this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
+        // Alert.alert(`获取到 ${result.items.length} 条数据`);
         this.setState({
           dataSource: this.state.dataSource.cloneWithRows(result.items),
           isLoading: false,
@@ -119,7 +132,7 @@ export default class MyPolularScreen extends React.Component{
   render(){
     const { navigation } = this.props;
 
-    var content = this.state.languages.length > 0 ?
+    let content = this.state.languages.length > 0 ?
             <ScrollableTabView
                 tabBarUnderlineColor='#fff'
                 tabBarInactiveTextColor='mintcream'
@@ -139,6 +152,7 @@ export default class MyPolularScreen extends React.Component{
                 })}
             </ScrollableTabView>
             : null;
+
     return (
       <CommonNavScreen navigation={navigation}>
         <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>
