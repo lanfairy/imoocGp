@@ -1,31 +1,57 @@
 import React from 'react';
 import { View, Image, StyleSheet, Text, TextInput, Alert, ListView} from 'react-native';
+import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view'
 
 import {MyNavScreen,CommonNavScreen} from '../commonComponents/MyNavScreen';
 import HttpUtils from '../utils/HttpUtils';
 import URLConfig from '../config/URLConfig';
 import {ThemeFlags} from '../config/ThemeConfig';
 import GlobalStyles from '../../res/style/GlobalStyles';
-// const MyPolularScreen = ({ navigation }) => (
-  // <MyNavScreen banner="polular Tab" navigation={navigation} />
-  // <CommonNavScreen navigation={navigation} children={<View></View>} />
-// );
+import RepositoryCell from '../commonComponents/RepositoryCell';
 
-export default class MyPolularScreen extends React.Component{
+class PopularTab extends React.Component{
   constructor(props){
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
     this.state = {
       result: '',
       dataSource: ds.cloneWithRows([]),
     }
   }
+  render(){
+    let content = <ListView
+          ref='listView'
+          renderRow={this._renderRow}
+                renderFooter={()=> {
+                    return <View style={{height: 50}}/>
+                }}
+                enableEmptySections={true}
+                dataSource={this.state.dataSource}
+      />;
+    return (
+      <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>
+        {content}
+      </View>
+    );
+  }
+  // <View style={[GlobalStyles.cell_container]}>
+  //   <Text style={GlobalStyles.cell_text_full_name}>{rowData.full_name}</Text>
+  //   <Text style={GlobalStyles.cell_text_description}>{rowData.description}</Text>
+  //   <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: 200}}>
+  //     <Text>Icon</Text>
+  //     <Image source={{uri:rowData.owner.avatar_url}} style={GlobalStyles.cell_img_owner_avatar} />
+  //   </View>
+  // </View>
+  _renderRow = (rowData)=>{
+    return(
+      <RepositoryCell rowData={rowData}/>
+    )
+  };
   componentDidMount(){
     this._onLoad();
   }
   _onLoad = ()=>{
-    let URL = URLConfig.getSearchURL(this.text);
+    let URL = URLConfig.getSearchURL(this.props.TabText);
 
     HttpUtils.get(URL)
       .then((result)=>{
@@ -40,51 +66,54 @@ export default class MyPolularScreen extends React.Component{
         })
       }))
   };
-  //   <Text style={styles.tips}
-  //   onPress={this._onLoad}
-  //   >获取数据</Text>
-  //   <TextInput style={styles.textInput} onChangeText={text=>this.text=text}/>
-  //   <Text style={{height: 500,backgroundColor:'lightgray'}}>{this.state.result}</Text>
-  // refreshControl={
-  //     <RefreshControl
-  //         refreshing={this.state.isLoading}
-  //         onRefresh={()=>this.onRefresh()}
-  //         tintColor={ThemeFlags.Polular}
-  //         title="Loading..."
-  //         titleColor={this.props.theme.themeColor}
-  //         colors={[this.props.theme.themeColor, this.props.theme.themeColor, this.props.theme.themeColor]}
-  //     />}
-  _renderRow = (rowData)=>{
-    return(
-      <View style={styles.flex}>
-        <Text>{rowData.full_name}</Text>
-        <Text>{rowData.description}</Text>
-        <View>
-          <Text></Text>
-          <Image source={{uri:rowData.owner.avatar_url} style={{width: 30,height: 30}}} />
-        </View>
-      </View>
-    )
-  };
+}
+
+export default class MyPolularScreen extends React.Component{
+  constructor(props){
+    super(props);
+
+    this.state = {
+      languages: [
+                  {name:'iOS'},
+                  {name:'Android'},
+                  {name:'Web'},
+                  {name:'Python'}
+                ],
+    }
+  }
+
+
+
   render(){
     const { navigation } = this.props;
-    let content = <ListView
-          ref='listView'
-          renderRow={this._renderRow}
-                renderFooter={()=> {
-                    return <View style={{height: 50}}/>
-                }}
-                enableEmptySections={true}
-                dataSource={this.state.dataSource}
 
-      />;
+    var content = this.state.languages.length > 0 ?
+            <ScrollableTabView
+                tabBarUnderlineColor='#fff'
+                tabBarInactiveTextColor='mintcream'
+                tabBarActiveTextColor='white'
+                tabBarBackgroundColor={ThemeFlags.Polular}
+                ref="scrollableTabView"
+                initialPage={0}
+                page={0}
+                tabBarUnderlineStyle = {{height:2, backgroundColor:'mintcream'}}
+                renderTabBar={() => <ScrollableTabBar style={{height: 40,borderWidth:0,elevation:2}} tabStyle={{height: 39}}
+                                                      underlineHeight={2}/>}
+            >
+                {this.state.languages.map((result, i, arr)=> {
+                    let language = result;
+                    return language &&
+                        <PopularTab key={i} TabText={language.name}
+                                    tabLabel={language.name}/>;
+                })}
+            </ScrollableTabView>
+            : null;
     return (
       <CommonNavScreen navigation={navigation}>
-      <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>
-        {content}
-      </View>
+        <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>
+          {content}
+        </View>
       </CommonNavScreen>
-
     )
   }
 }
@@ -104,6 +133,9 @@ MyPolularScreen.navigationOptions = props => {
   };
 };
 const styles = StyleSheet.create({
+  flex: {
+    flex: 1,
+  },
   container: {
     backgroundColor:'skyblue',
     flex:1,

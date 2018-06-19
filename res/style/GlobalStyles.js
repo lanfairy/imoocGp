@@ -32,6 +32,16 @@ module.exports ={
         shadowRadius: 1,
         elevation:2
     },
+    cell_text_full_name: {
+      marginBottom: 5
+    },
+    cell_text_description: {
+      marginBottom: 5
+    },
+    cell_img_owner_avatar: {
+      width: 22,
+      height: 22
+    },
     listView_container:{
         flex: 1,
         backgroundColor: '#f3f3f4',
@@ -42,5 +52,6 @@ module.exports ={
     window_width:width,
     nav_bar_height_ios:44,
     nav_bar_height_android:50,
+
 
 };
