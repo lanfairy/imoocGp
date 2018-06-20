@@ -18,7 +18,7 @@
   {
     "path": "react-native",
     "name": "React Native",
-    "checked": false
+    "checked": true
   },
   {
     "path": "MySQL",

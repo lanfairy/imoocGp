@@ -10,7 +10,8 @@ import {
   ListView
 } from 'react-native';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
-import Toast, {DURATION} from 'react-native-easy-toast';
+import Toast, { DURATION } from 'react-native-easy-toast';
+import LanguageDao, { FLAG_LANGUAGE } from '../expand/dao/LanguageDao';
 
 import {MyNavScreen,CommonNavScreen} from '../commonComponents/MyNavScreen';
 import HttpUtils from '../utils/HttpUtils';
@@ -78,6 +79,9 @@ class PopularTab extends React.Component{
   componentDidMount(){
     this._loadData(true);
   }
+  componentWillUnmount(){
+    
+  }
   _renderRow = (rowData)=>{
     return(
       <RepositoryCell rowData={rowData}/>
@@ -116,19 +120,25 @@ class PopularTab extends React.Component{
 export default class MyPolularScreen extends React.Component{
   constructor(props){
     super(props);
-
+    this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_key);
     this.state = {
-      languages: [
-                  {name:'iOS'},
-                  {name:'Android'},
-                  {name:'Web'},
-                  {name:'Python'}
-                ],
+      languages: [],
     }
   }
 
+  componentDidMount(){
+    this.loadLanguages();
+  }
+  loadLanguages(){
+    this.languageDao.fetch()
+        .then((languages)=>{
+          this.setState({
+            languages: languages,
+          })
+        }).catch((error)=>{
 
-
+        });
+  }
   render(){
     const { navigation } = this.props;
 
@@ -147,8 +157,8 @@ export default class MyPolularScreen extends React.Component{
             >
                 {this.state.languages.map((result, i, arr)=> {
                     let language = result;
-                    return language &&
-                        <PopularTab key={i} tabLabel={language.name}/>;
+                    return language && language.checked ?
+                        <PopularTab key={i} tabLabel={language.name}/> : null;
                 })}
             </ScrollableTabView>
             : null;
