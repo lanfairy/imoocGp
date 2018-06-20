@@ -4,17 +4,23 @@ import type {
   NavigationScreenProp,
   NavigationEventSubscription,
 } from 'react-navigation';
-import { MyNavScreen } from '../commonComponents/MyNavScreen';
+import { CommonNavScreen } from '../commonComponents/MyNavScreen';
 import { ThemeFlags } from '../config/ThemeConfig';
 
 // const MyMineScreen = ({ navigation }) => (
 //   <MyNavScreen banner="Mine Tab" navigation={navigation} />
 // );
 class MyMineScreen extends React.Component{
+
   render(){
     const {navigation} = this.props;
+    let content =
     return (
-      <MyNavScreen banner="Mine Tab" navigation={navigation} />
+      <CommonNavScreen navigation={navigation}>
+        <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>
+          {content}
+        </View>
+      </CommonNavScreen>
     )
   }
 }
