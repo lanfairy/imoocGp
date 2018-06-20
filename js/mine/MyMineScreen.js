@@ -14,7 +14,7 @@ class MyMineScreen extends React.Component{
 
   render(){
     const {navigation} = this.props;
-    let content =
+    let content = 
     return (
       <CommonNavScreen navigation={navigation}>
         <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>

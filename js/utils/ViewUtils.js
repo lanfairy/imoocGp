@@ -27,8 +27,22 @@ export default class ViewUtils {
             />
         </View>
       </TouchableHighlight>
-    )
+    );
   }
+
+  static getLeftBtn(callBack){
+    return (
+      <TouchableOpacity
+        onPress={callBack}
+        style={{padding:8}}
+      >
+        <Image source={require('../../res/images/ic_arrow_back_white_36pt.png') style={{width:26, height:26, tintColor:'yellow'}}}
+      </TouchableOpacity>
+    );
+  }
+
+
+
 }
 
 

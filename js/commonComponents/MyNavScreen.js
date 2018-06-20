@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   flex: {
     flex:1,
   }
-})
+});
 // const CommonNavScreen = ({ navigation, children }) => (
 //   <SafeAreaView forceInset={{ horizontal: 'always', top: 'always' }}>
 //     {children}

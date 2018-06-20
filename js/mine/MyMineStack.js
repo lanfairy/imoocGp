@@ -2,12 +2,16 @@ import React from 'react';
 import { Text, Image, StyleSheet} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MyMineScreen from './MyMineScreen';
+import CustomKeyPage from './CustomKeyPage';
 import  { ThemeFlags } from '../config/ThemeConfig';
 
 const MyMineStack = createStackNavigator({
   MineHome: {
     screen: MyMineScreen,
   },
+  CustomKey:{
+    screen: CustomKeyPage,
+  }
 
 });
 
