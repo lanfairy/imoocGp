@@ -23,7 +23,7 @@ export default class ViewUtils {
             <Text>{text}</Text>
           </View>
           <Image source={expandableIcon ? expandableIcon : require('../../res/images/ic_tiaozhuan.png')}
-            style={[{opacity: 1, width: 22, height: 22, marginRight: 10, alignSelf: 'center'}, tintStyle]}
+            style={[styles.expandable_icon, tintStyle]}
             />
         </View>
       </TouchableHighlight>
@@ -44,5 +44,12 @@ const styles = StyleSheet.create({
   icon_text_view: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  expandable_icon: {
+    opacity: 1,
+    width: 22,
+    height: 22,
+    marginRight: 10,
+    alignSelf: 'center'
   }
 })
