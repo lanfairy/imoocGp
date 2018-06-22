@@ -14,13 +14,20 @@ import CheckBox from 'react-native-check-box';
 import ViewUtils from '../utils/ViewUtils';
 import { ThemeFlags } from '../config/ThemeConfig';
 import LanguageDao from '../expand/dao/LanguageDao';
+import ArrayUtils from '../utils/ArrayUtils';
 
 export default class CustomKeyPage extends React.Component {
   constructor(props){
     super(props);
+    this.changeValues = [];
     this.state = {
       dataArray: [],
     }
+  }
+  componentWillMount(){
+    this.props.navigation.setParams({
+      onSave: this.onSave,
+    })
   }
   componentDidMount(){
     const flag = this.props.navigation.getParam('flag');
@@ -37,8 +44,24 @@ export default class CustomKeyPage extends React.Component {
     });
   }
   onClick(item){
-
+    ArrayUtils.updateArray(this.changeValues, item);
   }
+  onSave = ()=>{
+    if(this.changeValues.length===0){
+
+      Alert.alert(
+  'Alert Title',
+  'My Alert Msg',
+  [
+    {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
+    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+    {text: 'OK', onPress: () => console.log('OK Pressed')},
+  ],
+  { cancelable: false }
+);
+      return;
+    }
+  };
   renderCheckBox(item){
     let leftText = item.name;
     let checked = item.checked;
@@ -102,9 +125,9 @@ CustomKeyPage.navigationOptions = props => {
   return {
     headerTitle: `自定义标签`,
     headerTintColor: '#FFF',
-    headerLeft: (ViewUtils.getLeftBtn(()=>{
-      navigation.pop();
-    })),
+    headerLeft: (ViewUtils.getLeftBtn(
+      params.onSave
+    )),
     headerRight: (
       null
     ),
