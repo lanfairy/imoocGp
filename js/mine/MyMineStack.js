@@ -15,18 +15,21 @@ const MyMineStack = createStackNavigator({
 
 });
 
-MyMineStack.navigationOptions = {
-
-  tabBarLabel: ({ tintColor, focused }) => {
-    let color = focused ? ThemeFlags.LightGreen : tintColor;
-    return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>我的</Text>;
-  },
-  tabBarIcon: ({ tintColor, focused }) => {
-    let color = focused ? ThemeFlags.LightGreen : tintColor;
-    return  <Image source={require('../../res/images/ic_my.png')} style={[{ tintColor: color},styles.tabbarIcon]}/>
-  },
-
-
+MyMineStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if(navigation.state.index > 0)
+    tabBarVisible = false;
+    return {
+      tabBarVisible,
+      tabBarLabel: ({ tintColor, focused }) => {
+        let color = focused ? ThemeFlags.LightGreen : tintColor;
+        return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>我的</Text>;
+      },
+      tabBarIcon: ({ tintColor, focused }) => {
+        let color = focused ? ThemeFlags.LightGreen : tintColor;
+        return  <Image source={require('../../res/images/ic_my.png')} style={[{ tintColor: color},styles.tabbarIcon]}/>
+      },
+    };
 };
 
 const styles = StyleSheet.create({
