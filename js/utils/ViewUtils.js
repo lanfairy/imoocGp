@@ -1,19 +1,19 @@
 'use strict'
 import React, { Component } from 'react';
 import {
-  TouchableHighlight,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  Text,
-  View,
+    TouchableHighlight,
+    Image,
+    TouchableOpacity,
+    StyleSheet,
+    Text,
+    View,
 } from 'react-native';
 
 export default class ViewUtils {
   static getSettingItem(callBack, icon, text, tintStyle, expandableIcon){
     return (
       <TouchableHighlight onPress={callBack} >
-        <View style={[styles.setting_item_container]>
+        <View style={[styles.setting_item_container]}>
           <View style={styles.icon_text_view}>
             {
               icon ?
@@ -23,8 +23,7 @@ export default class ViewUtils {
             <Text>{text}</Text>
           </View>
           <Image source={expandableIcon ? expandableIcon : require('../../res/images/ic_tiaozhuan.png')}
-            style={[styles.expandable_icon, tintStyle]}
-            />
+            style={[styles.expandable_icon, tintStyle]} />
         </View>
       </TouchableHighlight>
     );
@@ -36,7 +35,7 @@ export default class ViewUtils {
         onPress={callBack}
         style={{padding:8}}
       >
-        <Image source={require('../../res/images/ic_arrow_back_white_36pt.png') style={{width:26, height:26, tintColor:'yellow'}}}
+        <Image source={require('../../res/images/ic_arrow_back_white_36pt.png')} style={{width:26, height:26, tintColor:'white'}} />
       </TouchableOpacity>
     );
   }
@@ -66,4 +65,4 @@ const styles = StyleSheet.create({
     marginRight: 10,
     alignSelf: 'center'
   }
-})
+});

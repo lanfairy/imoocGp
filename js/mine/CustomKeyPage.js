@@ -1,8 +1,14 @@
 'use strict'
 import React from 'react';
-import {  ScrollView, StyleSheet} from 'react-native';
+import {
+  View,
+  ScrollView,
+  StatusBar,
+  StyleSheet
+} from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import ViewUtils from '../utils/ViewUtils';
+import { ThemeFlags } from '../config/ThemeConfig';
 export default class CustomKeyPage extends React.Component {
   constructor(props){
     super(props);
@@ -31,8 +37,8 @@ CustomKeyPage.navigationOptions = props => {
   return {
     headerTitle: `自定义标签`,
     headerTintColor: '#FFF',
-    heeaderLeft: (ViewUtils.getLeftBtn(()=>{
-      navigate.pop();
+    headerLeft: (ViewUtils.getLeftBtn(()=>{
+      navigation.pop();
     })),
     headerRight: (
       null
