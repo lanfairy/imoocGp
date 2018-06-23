@@ -1,10 +1,11 @@
+'use strict'
 export default class ArrayUtils {
   /**
    * 更新数组,若item已存在则将其从数组中删除,若不存在则将其添加到数组
    */
   static updateArray(array, item){
     if(!array)return;
-    array.foreach((value,index)=>{
+    array.forEach((value,index)=>{
       if(value === item){
         array.splice(index,1);
         return;
@@ -17,7 +18,7 @@ export default class ArrayUtils {
    */
   static add(array, item){
     if(!array)return;
-    array.foreach((val, index)=>{
+    array.forEach((val, index)=>{
       if(val === item)return;
     });
     array.push(item);
@@ -28,7 +29,7 @@ export default class ArrayUtils {
    */
   static remove(array, item){
     if(!array)return;
-    array.foreach((val, index)=>{
+    array.forEach((val, index)=>{
       if(val === item) array.splice(index,1);
     })
   }
@@ -47,7 +48,7 @@ export default class ArrayUtils {
   static isEqual(arr1, arr2){
     if(!(arr1&&arr2))return false;
     if(arr1.length!=arr2.length)return false;
-    arr1.foreach((val, index)=>{
+    arr1.forEach((val, index)=>{
       if(val != arr2[index])return false;
     });
     return true;

@@ -27,6 +27,7 @@ export default class CustomKeyPage extends React.Component {
   componentWillMount(){
     this.props.navigation.setParams({
       onSave: this._onSave,
+      onBack: this._onBack,
     })
   }
   componentDidMount(){
@@ -44,24 +45,37 @@ export default class CustomKeyPage extends React.Component {
     });
   }
   onClick(item){
+    item.checked = !item.checked;
     ArrayUtils.updateArray(this.changeValues, item);
   }
   _onSave = ()=>{
     if(this.changeValues.length===0){
-
-      Alert.alert(
-  'Alert Title',
-  'My Alert Msg',
-  [
-    {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
-    {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-    {text: 'OK', onPress: () => this.props.navigation.pop()},
-  ],
-  { cancelable: false }
-);
       return;
     }
+    this.languageDao.save(this.state.dataArray);
+    this.changeValues.splice(0,this.changeValues.length);
+    // this.props.navigation.pop();
   };
+  _onBack = ()=>{
+    if(this.changeValues.length===0){
+      this.props.navigation.pop();
+      return;
+    }
+
+    Alert.alert(
+      '提示',
+      '要保存修改吗?',
+      [
+        {text: '不保存', onPress: () => this.props.navigation.pop()},
+        {text: '保存', onPress: () => {
+          this.languageDao.save(this.state.dataArray);
+          this.props.navigation.pop();
+        }},
+      ],
+      { cancelable: false }
+    );
+  };
+
   renderCheckBox(item){
     let leftText = item.name;
     let checked = item.checked;
@@ -126,10 +140,12 @@ CustomKeyPage.navigationOptions = props => {
     headerTitle: `自定义标签`,
     headerTintColor: '#FFF',
     headerLeft: (ViewUtils.getLeftBtn(
-      navigation.getParam('onSave')
+      navigation.getParam('onBack')
     )),
     headerRight: (
-      null
+      ViewUtils.getRightBtn(
+        navigation.getParam('onSave'),null,'保存'
+      )
     ),
     // gesturesEnabled: false,
     headerStyle: {
