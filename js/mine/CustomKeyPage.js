@@ -6,7 +6,7 @@ import {
   StatusBar,
   StyleSheet,
   Image,
-  Alter,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-navigation';
 import CheckBox from 'react-native-check-box';
@@ -26,7 +26,7 @@ export default class CustomKeyPage extends React.Component {
   }
   componentWillMount(){
     this.props.navigation.setParams({
-      onSave: this.onSave,
+      onSave: this._onSave,
     })
   }
   componentDidMount(){
@@ -46,7 +46,7 @@ export default class CustomKeyPage extends React.Component {
   onClick(item){
     ArrayUtils.updateArray(this.changeValues, item);
   }
-  onSave = ()=>{
+  _onSave = ()=>{
     if(this.changeValues.length===0){
 
       Alert.alert(
@@ -55,7 +55,7 @@ export default class CustomKeyPage extends React.Component {
   [
     {text: 'Ask me later', onPress: () => console.log('Ask me later pressed')},
     {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-    {text: 'OK', onPress: () => console.log('OK Pressed')},
+    {text: 'OK', onPress: () => this.props.navigation.pop()},
   ],
   { cancelable: false }
 );
@@ -126,11 +126,12 @@ CustomKeyPage.navigationOptions = props => {
     headerTitle: `自定义标签`,
     headerTintColor: '#FFF',
     headerLeft: (ViewUtils.getLeftBtn(
-      params.onSave
+      navigation.getParam('onSave')
     )),
     headerRight: (
       null
     ),
+    // gesturesEnabled: false,
     headerStyle: {
       backgroundColor: ThemeFlags.LightGreen,
     }
