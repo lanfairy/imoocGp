@@ -7,7 +7,8 @@ import {
   Text,
   TextInput,
   Alert,
-  ListView
+  ListView,
+  DeviceEventEmitter,
 } from 'react-native';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 import Toast, { DURATION } from 'react-native-easy-toast';
@@ -19,11 +20,12 @@ import URLConfig from '../config/URLConfig';
 import {ThemeFlags} from '../config/ThemeConfig';
 import GlobalStyles from '../../res/style/GlobalStyles';
 import RepositoryCell from '../commonComponents/RepositoryCell';
-
+import DataRepository from '../expand/dao/DataRepository';
 class PopularTab extends React.Component{
   constructor(props){
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.dataRepository = new DataRepository();
     this.state = {
       result: '',
       isLoading: false,
@@ -37,7 +39,7 @@ class PopularTab extends React.Component{
             ref="toast"
             style={{backgroundColor:ThemeFlags.Polular}}
             position='bottom'
-            positionValue={200}
+            positionValue={250}
             fadeInDuration={750}
             fadeOutDuration={1200}
             opacity={0.95}
@@ -80,7 +82,7 @@ class PopularTab extends React.Component{
     this._loadData(true);
   }
   componentWillUnmount(){
-    
+
   }
   _renderRow = (rowData)=>{
     return(
@@ -95,24 +97,92 @@ class PopularTab extends React.Component{
       isLoading: true,
     })
     let URL = URLConfig.getSearchURL(this.props.tabLabel);
+    // this.dataRepository.fetchNetRepository(URL)
+    //   .then((result)=>{
+    //     this.refs.toast.show(`获取到 ${result.length} 条数据`);
+    //     // Alert.alert(`获取到 ${result.items.length} 条数据`);
+    //     this.setState({
+    //       dataSource: this.state.dataSource.cloneWithRows(result),
+    //       isLoading: false,
+    //       isLoadingFail: false,
+    //     })
+    //   })
+    //   .catch((error=>{
+    //     this.setState({
+    //       result: JSON.stringify(error),
+    //       isLoading: false,
+    //       isLoadingFail: true,
+    //     })
+    //   }))
+    // this.dataRepository.fetchLocalRepository(URL)
+    // .then((result)=>{
+    //   // Alert.alert(`获取到 ${result.items.length} 条数据`);
+    //   this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
+    //   let items = result&&result.items ? result.items : result ? result : [];
+    //   this.setState({
+    //     dataSource: this.state.dataSource.cloneWithRows(items),
+    //     isLoading: false,
+    //     isLoadingFail: false,
+    //   });
+    //
+    // })
+    // .catch(error=>{
+    //   this.refs.toast.show(error);
+    //   this.setState({
+    //     result: JSON.stringify(error),
+    //     isLoading: false,
+    //     isLoadingFail: true,
+    //   })
+    // });
 
-    HttpUtils.get(URL)
-      .then((result)=>{
-        this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
-        // Alert.alert(`获取到 ${result.items.length} 条数据`);
-        this.setState({
-          dataSource: this.state.dataSource.cloneWithRows(result.items),
-          isLoading: false,
-          isLoadingFail: false,
-        })
-      })
-      .catch((error=>{
-        this.setState({
-          result: JSON.stringify(error),
-          isLoading: false,
-          isLoadingFail: true,
-        })
-      }))
+    this.dataRepository.fetchRepository(URL)
+                  .then((result)=>{
+                    this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
+                    let items = result&&result.items ? result.items : result ? result : [];
+                    this.setState({
+                      dataSource: this.state.dataSource.cloneWithRows(items),
+                      isLoading: false,
+                      isLoadingFail: false,
+                    });
+                    if(result&&result.date&&this.dataRepository.checkDate(result.date)){
+                      return this.dataRepository.fetchNetRepository(URL);
+                    }
+                  })
+                  .then((result)=>{
+                      this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
+                      // Alert.alert(`获取到 ${result.items.length} 条数据`);
+                      this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(result.items),
+                        isLoading: false,
+                        isLoadingFail: false,
+                      })
+                  })
+                  .catch(error=>{
+                    this.refs.toast.show(error);
+                    this.setState({
+                      result: JSON.stringify(error),
+                      isLoading: false,
+                      isLoadingFail: true,
+                    })
+                  });
+
+    // HttpUtils.get(URL)
+    //   .then((result)=>{
+    //     this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
+    //     // Alert.alert(`获取到 ${result.items.length} 条数据`);
+    //     this.setState({
+    //       dataSource: this.state.dataSource.cloneWithRows(result.items),
+    //       isLoading: false,
+    //       isLoadingFail: false,
+    //     })
+    //   })
+    //   .catch((error=>{
+    //     this.setState({
+    //       result: JSON.stringify(error),
+    //       isLoading: false,
+    //       isLoadingFail: true,
+    //     })
+      // }))
   };
 
 }
