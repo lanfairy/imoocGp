@@ -21,9 +21,16 @@ class MyMineScreen extends React.Component{
 
   render(){
     const {navigation} = this.props;
-    let content = <View>
-                    <Text onPress={()=>navigation.navigate('CustomKey',{flag: FLAG_LANGUAGE.flag_key})} style={{fontSize: 20, margin: 20, backgroundColor: 'red'}}>自定义标签</Text>
-                  </View>;
+    let content =
+      <View>
+        <View>
+          <Text onPress={()=>navigation.navigate('CustomKey',{flag: FLAG_LANGUAGE.flag_key})} style={{fontSize: 20, margin: 20, backgroundColor: 'red'}}>自定义标签</Text>
+        </View>
+        <View>
+          <Text onPress={()=>navigation.navigate('SortKey')} style={{fontSize: 20, margin: 20, backgroundColor: 'red'}}>标签排序</Text>
+        </View>
+      </View>
+            ;
     return (
       <CommonNavScreen navigation={navigation}>
         <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>

@@ -3,6 +3,7 @@ import { Text, Image, StyleSheet} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MyMineScreen from './MyMineScreen';
 import CustomKeyPage from './CustomKeyPage';
+import SortKeyPage from './SortKeyPage';
 import  { ThemeFlags } from '../config/ThemeConfig';
 
 const MyMineStack = createStackNavigator({
@@ -11,6 +12,9 @@ const MyMineStack = createStackNavigator({
   },
   CustomKey:{
     screen: CustomKeyPage,
+  },
+  SortKey:{
+    screen: SortKeyPage,
   }
 
 });

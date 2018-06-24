@@ -45,12 +45,20 @@ export default class ArrayUtils {
   /**
    * 判断两个数组的是否相等
    */
-  static isEqual(arr1, arr2){
-    if(!(arr1&&arr2))return false;
-    if(arr1.length!=arr2.length)return false;
-    arr1.forEach((val, index)=>{
-      if(val != arr2[index])return false;
-    });
-    return true;
-  }
+  // static isEqual(arr1, arr2){
+  //   if(!(arr1&&arr2))return false;
+  //   if(arr1.length!=arr2.length)return false;
+  //   arr1.forEach((val, index)=>{
+  //     if(arr1[index] != arr2[index])return false;
+  //   });
+  //   return true;
+  // }
+  static isEqual(arr1,arr2){
+        if(!(arr1&&arr2))return false;
+        if(arr1.length!=arr2.length)return false;
+        for(let i=0,l=arr1.length;i<l;i++){
+            if (arr1[i]!=arr2[i])return false;
+        }
+        return true;
+    }
 }
