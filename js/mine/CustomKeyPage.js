@@ -19,6 +19,7 @@ import ArrayUtils from '../utils/ArrayUtils';
 export default class CustomKeyPage extends React.Component {
   constructor(props){
     super(props);
+    this.isRemoveKey = this.props.navigation.getParam('isRemoveKey') ? true : false;
     this.changeValues = [];
     this.state = {
       dataArray: [],
@@ -45,12 +46,18 @@ export default class CustomKeyPage extends React.Component {
     });
   }
   onClick(item){
+    if(!this.isRemoveKey)
     item.checked = !item.checked;
     ArrayUtils.updateArray(this.changeValues, item);
   }
   _onSave = ()=>{
     if(this.changeValues.length===0){
       return;
+    }
+    if(this.isRemoveKey){
+      this.changeValues.forEach((val, index)=>{
+        ArrayUtils.remove(this.state.dataArray,val);
+      })
     }
     this.languageDao.save(this.state.dataArray);
     this.changeValues.splice(0,this.changeValues.length);
@@ -68,7 +75,8 @@ export default class CustomKeyPage extends React.Component {
       [
         {text: '不保存', onPress: () => this.props.navigation.pop()},
         {text: '保存', onPress: () => {
-          this.languageDao.save(this.state.dataArray);
+          this._onSave();
+          // this.languageDao.save(this.state.dataArray);
           this.props.navigation.pop();
         }},
       ],
@@ -78,7 +86,7 @@ export default class CustomKeyPage extends React.Component {
 
   renderCheckBox(item){
     let leftText = item.name;
-    let checked = item.checked;
+    let checked = this.isRemoveKey ? false : item.checked;
     return (
       <CheckBox
             style={{flex: 1, padding: 10}}
@@ -136,15 +144,18 @@ CustomKeyPage.navigationOptions = props => {
   const { navigation } = props;
   const { state, setParams } = navigation;
   const { params } = state;
+  const isRemoveKey = navigation.getParam('isRemoveKey');
+  let title = isRemoveKey ? '标签移除' : '自定义标签';
+  let rightBtnText = isRemoveKey ? '移除' : '保存';
   return {
-    headerTitle: `自定义标签`,
+    headerTitle: title,
     headerTintColor: '#FFF',
     headerLeft: (ViewUtils.getLeftBtn(
       navigation.getParam('onBack')
     )),
     headerRight: (
       ViewUtils.getRightBtn(
-        navigation.getParam('onSave'),null,'保存'
+        navigation.getParam('onSave'),null,rightBtnText
       )
     ),
     // gesturesEnabled: false,

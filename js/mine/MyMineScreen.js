@@ -29,6 +29,9 @@ class MyMineScreen extends React.Component{
         <View>
           <Text onPress={()=>navigation.navigate('SortKey')} style={{fontSize: 20, margin: 20, backgroundColor: 'red'}}>标签排序</Text>
         </View>
+        <View>
+          <Text onPress={()=>navigation.navigate('CustomKey',{flag: FLAG_LANGUAGE.flag_key,isRemoveKey:true})} style={{fontSize: 20, margin: 20, backgroundColor: 'red'}}>标签移除</Text>
+        </View>
       </View>
             ;
     return (
