@@ -86,6 +86,7 @@ export default class DataRepository{
         if (!items || !url)return;
         let wrapData={items:items,date:new Date().getTime()};
         AsyncStorage.setItem(url, JSON.stringify(wrapData), callback);
+        console.log('保存获取到的网络数据');
     }
 
   removeRepository(url) {
@@ -101,7 +102,7 @@ export default class DataRepository{
       if (currentDate.getMonth() !== targetDate.getMonth())return false;
       if (currentDate.getDate() !== targetDate.getDate())return false;
       if (currentDate.getHours() - targetDate.getHours() > 4)return false;
-      // if (currentDate.getMinutes() - targetDate.getMinutes() > 1)return false;
+      if (currentDate.getMinutes() - targetDate.getMinutes() > 1)return false;
       return true;
   }
 

@@ -21,11 +21,13 @@ import {ThemeFlags} from '../config/ThemeConfig';
 import GlobalStyles from '../../res/style/GlobalStyles';
 import RepositoryCell from '../commonComponents/RepositoryCell';
 import DataRepository from '../expand/dao/DataRepository';
+
+var dataRepository = new DataRepository();
 class PopularTab extends React.Component{
   constructor(props){
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.dataRepository = new DataRepository();
+    // this.dataRepository = new DataRepository();
     this.state = {
       result: '',
       isLoading: false,
@@ -97,45 +99,9 @@ class PopularTab extends React.Component{
       isLoading: true,
     })
     let URL = URLConfig.getSearchURL(this.props.tabLabel);
-    // this.dataRepository.fetchNetRepository(URL)
-    //   .then((result)=>{
-    //     this.refs.toast.show(`获取到 ${result.length} 条数据`);
-    //     // Alert.alert(`获取到 ${result.items.length} 条数据`);
-    //     this.setState({
-    //       dataSource: this.state.dataSource.cloneWithRows(result),
-    //       isLoading: false,
-    //       isLoadingFail: false,
-    //     })
-    //   })
-    //   .catch((error=>{
-    //     this.setState({
-    //       result: JSON.stringify(error),
-    //       isLoading: false,
-    //       isLoadingFail: true,
-    //     })
-    //   }))
-    // this.dataRepository.fetchLocalRepository(URL)
-    // .then((result)=>{
-    //   // Alert.alert(`获取到 ${result.items.length} 条数据`);
-    //   this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
-    //   let items = result&&result.items ? result.items : result ? result : [];
-    //   this.setState({
-    //     dataSource: this.state.dataSource.cloneWithRows(items),
-    //     isLoading: false,
-    //     isLoadingFail: false,
-    //   });
-    //
-    // })
-    // .catch(error=>{
-    //   this.refs.toast.show(error);
-    //   this.setState({
-    //     result: JSON.stringify(error),
-    //     isLoading: false,
-    //     isLoadingFail: true,
-    //   })
-    // });
 
-    this.dataRepository.fetchRepository(URL)
+
+    dataRepository.fetchRepository(URL)
                   .then((result)=>{
                     this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
                     let items = result&&result.items ? result.items : result ? result : [];
@@ -144,12 +110,15 @@ class PopularTab extends React.Component{
                       isLoading: false,
                       isLoadingFail: false,
                     });
-                    if(result&&result.date&&this.dataRepository.checkDate(result.date)){
-                      return this.dataRepository.fetchNetRepository(URL);
+                    if(result&&result.date&&!dataRepository.checkDate(result.date)){
+                      return dataRepository.fetchNetRepository(URL);
                     }
+                    // return dataRepository.fetchNetRepository(URL);
                   })
                   .then((result)=>{
-                      this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
+                    console.log(`----- ${result}`);
+                    if(!result || !result.items || result.items.length==0)return;
+                      this.refs.toast.show(`网络数据获取到 ${result.tems.length} 条数据`);
                       // Alert.alert(`获取到 ${result.items.length} 条数据`);
                       this.setState({
                         dataSource: this.state.dataSource.cloneWithRows(result.items),
@@ -165,24 +134,6 @@ class PopularTab extends React.Component{
                       isLoadingFail: true,
                     })
                   });
-
-    // HttpUtils.get(URL)
-    //   .then((result)=>{
-    //     this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
-    //     // Alert.alert(`获取到 ${result.items.length} 条数据`);
-    //     this.setState({
-    //       dataSource: this.state.dataSource.cloneWithRows(result.items),
-    //       isLoading: false,
-    //       isLoadingFail: false,
-    //     })
-    //   })
-    //   .catch((error=>{
-    //     this.setState({
-    //       result: JSON.stringify(error),
-    //       isLoading: false,
-    //       isLoadingFail: true,
-    //     })
-      // }))
   };
 
 }
