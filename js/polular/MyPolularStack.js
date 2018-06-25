@@ -3,11 +3,15 @@ import { Text, Image, StyleSheet} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MyPolularScreen from './MyPolularScreen';
 import {ThemeFlags} from '../config/ThemeConfig';
+import RepositoryDetailPage from './RepositoryDetail';
 
 const MyPolularStack = createStackNavigator({
   PolularHome: {
     screen: MyPolularScreen,
   },
+  RepositoryDetail: {
+    screen: RepositoryDetailPage,
+  }
 
 });
 MyPolularStack.navigationOptions = {

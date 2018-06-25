@@ -72,23 +72,20 @@ class PopularTab extends React.Component{
       </View>
     );
   }
-  // <View style={[GlobalStyles.cell_container]}>
-  //   <Text style={GlobalStyles.cell_text_full_name}>{rowData.full_name}</Text>
-  //   <Text style={GlobalStyles.cell_text_description}>{rowData.description}</Text>
-  //   <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', width: 200}}>
-  //     <Text>Icon</Text>
-  //     <Image source={{uri:rowData.owner.avatar_url}} style={GlobalStyles.cell_img_owner_avatar} />
-  //   </View>
-  // </View>
+
   componentDidMount(){
     this._loadData(true);
   }
   componentWillUnmount(){
 
   }
+  onSelectRepository=(rowData)=>{
+    const {navigation} = this.props;
+    navigation.navigate('RepositoryDetail',{rowData: rowData});
+  };
   _renderRow = (rowData)=>{
     return(
-      <RepositoryCell rowData={rowData}/>
+      <RepositoryCell rowData={rowData} onSelected={this.onSelectRepository}/>
     )
   };
   _onRefresh = ()=>{
@@ -113,7 +110,7 @@ class PopularTab extends React.Component{
                     if(result&&result.date&&!dataRepository.checkDate(result.date)){
                       return dataRepository.fetchNetRepository(URL);
                     }
-                    // return dataRepository.fetchNetRepository(URL);
+
                   })
                   .then((result)=>{
                     console.log(`----- ${result}`);
@@ -179,7 +176,7 @@ export default class MyPolularScreen extends React.Component{
                 {this.state.languages.map((result, i, arr)=> {
                     let language = result;
                     return language && language.checked ?
-                        <PopularTab key={i} tabLabel={language.name}/> : null;
+                        <PopularTab key={i} tabLabel={language.name} {...this.props}/> : null;
                 })}
             </ScrollableTabView>
             : null;

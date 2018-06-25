@@ -18,14 +18,16 @@ export default class RepositoryCell extends Component{
     }
   }
   onPressFavorite = ()=>{
-
+    
   };
+
   render(){
     let rowData = this.state.rowData;
     let favoriteButton=
             <TouchableHighlight
                 style={{padding:6}}
-                onPress={this.onPressFavorite} underlayColor='transparent'>
+                onPress={this.onPressFavorite} 
+                underlayColor='transparent'>
                 <Image
                     ref='favoriteIcon'
                     style={[{width: 22, height: 22,}]}
@@ -33,6 +35,7 @@ export default class RepositoryCell extends Component{
             </TouchableHighlight>;
     return(
       <TouchableHighlight
+        onPress={()=>this.props.onSelected(rowData)}
         onShowUnderlay={this.props.onHighlight}
         underlayColor='transparent'
         onHideUnderlay={this.props.onUnhighlight}
