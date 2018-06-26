@@ -10,17 +10,21 @@ const MyTrendingStack = createStackNavigator({
   },
 
 });
-MyTrendingStack.navigationOptions = {
+MyTrendingStack.navigationOptions = ({navigation})=> {
+  let tabBarVisible = true;
+  if(navigation.state.index > 0)
+    tabBarVisible = false;
 
-    tabBarLabel: ({ tintColor, focused }) => {
-      let color = focused ? ThemeFlags.Pink : tintColor;
-      return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>趋势</Text>;
-    },
-    tabBarIcon: ({ tintColor, focused }) => {
-      let color = focused ? ThemeFlags.Pink : tintColor;
-    return  <Image source={require('../../res/images/ic_trending.png')} style={[{ tintColor: color},styles.tabbarIcon]}/>
-    },
-
+    return {
+      tabBarLabel: ({ tintColor, focused }) => {
+        let color = focused ? ThemeFlags.Pink : tintColor;
+        return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>趋势</Text>;
+      },
+      tabBarIcon: ({ tintColor, focused }) => {
+        let color = focused ? ThemeFlags.Pink : tintColor;
+      return  <Image source={require('../../res/images/ic_trending.png')} style={[{ tintColor: color},styles.tabbarIcon]}/>
+      },
+    };
 };
 
 const styles = StyleSheet.create({

@@ -82191,16 +82191,31 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
+  exports.FLAG_STORAGE = undefined;
 
   var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
   var _reactNative = _require(_dependencyMap[0], "react-native");
 
+  var _GitHubTrending = _require(_dependencyMap[1], "GitHubTrending");
+
+  var _GitHubTrending2 = _interopRequireDefault(_GitHubTrending);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+  var FLAG_STORAGE = exports.FLAG_STORAGE = {
+    flag_popular: 'popular',
+    flag_trending: 'trending'
+  };
+
   var DataRepository = function () {
-    function DataRepository() {
+    function DataRepository(flag) {
       _classCallCheck(this, DataRepository);
+
+      this.flag = flag;
+      if (flag === FLAG_STORAGE.flag_trending) this.trending = new _GitHubTrending2.default();
     }
 
     _createClass(DataRepository, [{
@@ -82255,21 +82270,36 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         var _this2 = this;
 
         return new Promise(function (resolve, reject) {
-          fetch(url).then(function (response) {
-            return response.json();
-          }).catch(function (error) {
-            console.log("[\u62A5\u9519 1] -- " + error);
-            reject(error);
-          }).then(function (responseData) {
-            if (!responseData || !responseData.items) {
-              reject(new Error('responseData is null'));
-              return;
-            }
+          if (_this2.flag === FLAG_STORAGE.flag_popular) {
+            fetch(url).then(function (response) {
+              return response.json();
+            }).catch(function (error) {
+              console.log("[\u62A5\u9519 1] -- " + error);
+              reject(error);
+            }).then(function (responseData) {
+              if (!responseData || !responseData.items) {
+                reject(new Error('responseData is null'));
+                return;
+              }
 
-            resolve(responseData.items);
+              resolve(responseData.items);
 
-            _this2.saveRepository(url, responseData.items);
-          }).done();
+              _this2.saveRepository(url, responseData.items);
+            }).done();
+          } else {
+            _this2.trending.fetchTrending(url).then(function (items) {
+              if (!items) {
+                reject(new Error('responseData is null'));
+                return;
+              }
+
+              resolve(items);
+
+              _this2.saveRepository(url, items);
+            }).catch(function (error) {
+              reject(error);
+            });
+          }
         });
       }
     }, {
@@ -82310,7 +82340,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }();
 
   exports.default = DataRepository;
-},624,[12],"js/expand/dao/DataRepository.js");
+},624,[12,651],"js/expand/dao/DataRepository.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -82507,42 +82537,48 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       screen: _MyTrendingScreen2.default
     }
   });
-  MyTrendingStack.navigationOptions = {
-    tabBarLabel: function tabBarLabel(_ref) {
-      var tintColor = _ref.tintColor,
-          focused = _ref.focused;
-      var color = focused ? _ThemeConfig.ThemeFlags.Pink : tintColor;
-      return _react2.default.createElement(
-        _reactNative.Text,
-        {
+
+  MyTrendingStack.navigationOptions = function (_ref) {
+    var navigation = _ref.navigation;
+    var tabBarVisible = true;
+    if (navigation.state.index > 0) tabBarVisible = false;
+    return {
+      tabBarLabel: function tabBarLabel(_ref2) {
+        var tintColor = _ref2.tintColor,
+            focused = _ref2.focused;
+        var color = focused ? _ThemeConfig.ThemeFlags.Pink : tintColor;
+        return _react2.default.createElement(
+          _reactNative.Text,
+          {
+            style: [{
+              color: color,
+              fontSize: 11,
+              marginBottom: 3
+            }],
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 21
+            }
+          },
+          "\u8D8B\u52BF"
+        );
+      },
+      tabBarIcon: function tabBarIcon(_ref3) {
+        var tintColor = _ref3.tintColor,
+            focused = _ref3.focused;
+        var color = focused ? _ThemeConfig.ThemeFlags.Pink : tintColor;
+        return _react2.default.createElement(_reactNative.Image, {
+          source: _require(_dependencyMap[5], '../../res/images/ic_trending.png'),
           style: [{
-            color: color,
-            fontSize: 11,
-            marginBottom: 3
-          }],
+            tintColor: color
+          }, styles.tabbarIcon],
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 17
+            lineNumber: 25
           }
-        },
-        "\u8D8B\u52BF"
-      );
-    },
-    tabBarIcon: function tabBarIcon(_ref2) {
-      var tintColor = _ref2.tintColor,
-          focused = _ref2.focused;
-      var color = focused ? _ThemeConfig.ThemeFlags.Pink : tintColor;
-      return _react2.default.createElement(_reactNative.Image, {
-        source: _require(_dependencyMap[5], '../../res/images/ic_trending.png'),
-        style: [{
-          tintColor: color
-        }, styles.tabbarIcon],
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 21
-        }
-      });
-    }
+        });
+      }
+    };
   };
 
   var styles = _reactNative.StyleSheet.create({
@@ -82576,6 +82612,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   var _MyNavScreen = _require(_dependencyMap[3], "../commonComponents/MyNavScreen");
 
   var _ThemeConfig = _require(_dependencyMap[4], "../config/ThemeConfig");
+
+  var _GlobalStyles = _require(_dependencyMap[5], "../../res/style/GlobalStyles");
+
+  var _GlobalStyles2 = _interopRequireDefault(_GlobalStyles);
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -82623,14 +82663,25 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       key: "render",
       value: function render() {
         var navigation = this.props.navigation;
-        return _react3.default.createElement(_MyNavScreen.MyNavScreen, {
-          banner: "Trending Tab",
-          navigation: navigation,
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 20
-          }
-        });
+        return _react3.default.createElement(
+          _MyNavScreen.CommonNavScreen,
+          {
+            navigation: navigation,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 26
+            }
+          },
+          _react3.default.createElement(_reactNative.View, {
+            style: [_GlobalStyles2.default.listView_container, {
+              paddingTop: 0
+            }],
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 27
+            }
+          })
+        );
       }
     }]);
 
@@ -82660,7 +82711,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = MyTrendingScreen;
-},628,[118,130,12,615,620],"js/trending/MyTrendingScreen.js");
+},628,[118,130,12,615,620,621],"js/trending/MyTrendingScreen.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -85128,6 +85179,257 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "type": "png"
   });
 },649,[326],"res/images/ic_my.png");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  var _GitHubTrending = _require(_dependencyMap[0], "./trending/GitHubTrending");
+
+  var _GitHubTrending2 = _interopRequireDefault(_GitHubTrending);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  module.exports = _GitHubTrending2.default;
+},651,[652],"node_modules/GitHubTrending/index.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  var _TrendingUtil = _require(_dependencyMap[0], "./TrendingUtil");
+
+  var _TrendingUtil2 = _interopRequireDefault(_TrendingUtil);
+
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  var _GitHubTrending = function () {
+    function GitHubTrending() {
+      _classCallCheck(this, GitHubTrending);
+    }
+
+    _createClass(GitHubTrending, [{
+      key: "GitHubTrending",
+      value: function GitHubTrending() {
+        if (typeof _GitHubTrending.instance === 'object') {
+          return _GitHubTrending.instance;
+        }
+
+        _GitHubTrending.instance = this;
+      }
+    }, {
+      key: "fetchTrending",
+      value: function fetchTrending(url) {
+        return new Promise(function (resolve, reject) {
+          fetch(url).then(function (response) {
+            return response.text();
+          }).catch(function (error) {
+            reject(error);
+            console.log(error);
+          }).then(function (responseData) {
+            try {
+              resolve(_TrendingUtil2.default.htmlToRepo(responseData));
+            } catch (e) {
+              reject(e);
+            }
+          }).done();
+        });
+      }
+    }]);
+
+    return GitHubTrending;
+  }();
+
+  exports.default = _GitHubTrending;
+},652,[653],"node_modules/GitHubTrending/trending/GitHubTrending.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    var _TrendingRepoModel = _require(_dependencyMap[0], "./TrendingRepoModel");
+
+    var _TrendingRepoModel2 = _interopRequireDefault(_TrendingRepoModel);
+
+    var _StringUtil = _require(_dependencyMap[1], "./StringUtil");
+
+    var _StringUtil2 = _interopRequireDefault(_StringUtil);
+
+    function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var TAGS = {
+        meta: {
+            start: '<span class="d-inline-block float-sm-right">',
+            end: '</span>'
+        },
+        forkCount: {
+            start: '<a class="muted-link d-inline-block mr-3"',
+            flag: '/stargazers">',
+            end: '</a>'
+        },
+        starCount: {
+            start: '<a class="muted-link d-inline-block mr-3"',
+            flag: '/network">',
+            end: '</a>'
+        }
+    };
+
+    var TrendingUtil = function () {
+        function TrendingUtil() {
+            _classCallCheck(this, TrendingUtil);
+        }
+
+        _createClass(TrendingUtil, null, [{
+            key: "htmlToRepo",
+            value: function htmlToRepo(responseData) {
+                responseData = responseData.substring(responseData.indexOf('<li class="repo-list-item'), responseData.indexOf('</ol>')).replace(/\n/, '');
+                var repos = [];
+                var splitWithH3 = responseData.split('<h3');
+                splitWithH3.shift();
+
+                for (var i = 0; i < splitWithH3.length; i++) {
+                    var repo = new _TrendingRepoModel2.default();
+                    var html = splitWithH3[i];
+                    this.parseRepoBaseInfo(repo, html);
+                    var metaNoteContent = this.parseContentWithNote(html, 'class="f6 text-gray mt-2">', '</li>');
+                    repo.meta = this.parseRepoLabelWithTag(repo, metaNoteContent, TAGS.meta);
+                    repo.starCount = this.parseRepoLabelWithTag(repo, metaNoteContent, TAGS.starCount);
+                    repo.forkCount = this.parseRepoLabelWithTag(repo, metaNoteContent, TAGS.forkCount);
+                    this.parseRepoLang(repo, metaNoteContent);
+                    this.parseRepoContributors(repo, metaNoteContent);
+                    repos.push(repo);
+                }
+
+                return repos;
+            }
+        }, {
+            key: "parseContentWithNote",
+            value: function parseContentWithNote(htmlStr, startFlag, endFlag) {
+                var noteStar = htmlStr.indexOf(startFlag);
+
+                if (noteStar == -1) {
+                    return '';
+                } else {
+                    noteStar += +startFlag.length;
+                }
+
+                var noteEnd = htmlStr.indexOf(endFlag, noteStar);
+                var content = htmlStr.substring(noteStar, noteEnd);
+                return _StringUtil2.default.trim(content);
+            }
+        }, {
+            key: "parseRepoBaseInfo",
+            value: function parseRepoBaseInfo(repo, htmlBaseInfo) {
+                var urlIndex = htmlBaseInfo.indexOf('<a href="') + '<a href="'.length;
+                var url = htmlBaseInfo.slice(urlIndex, htmlBaseInfo.indexOf('">', urlIndex));
+                repo.url = url;
+                repo.fullName = url.slice(1, url.length);
+                var description = this.parseContentWithNote(htmlBaseInfo, '<p class="col-9 d-inline-block text-gray m-0 pr-4">', '</p>');
+                repo.description = description;
+            }
+        }, {
+            key: "parseRepoLabelWithTag",
+            value: function parseRepoLabelWithTag(repo, noteContent, tag) {
+                var startFlag = void 0;
+
+                if (TAGS.starCount === tag || TAGS.forkCount === tag) {
+                    startFlag = tag.start + ' href="/' + repo.fullName + tag.flag;
+                } else {
+                    startFlag = tag.start;
+                }
+
+                var content = this.parseContentWithNote(noteContent, startFlag, tag.end);
+                var metaContent = content.substring(content.indexOf('</svg>') + '</svg>'.length, content.length);
+                return _StringUtil2.default.trim(metaContent);
+            }
+        }, {
+            key: "parseRepoLang",
+            value: function parseRepoLang(repo, metaNoteContent) {
+                var content = this.parseContentWithNote(metaNoteContent, 'programmingLanguage">', '</span>');
+                repo.language = _StringUtil2.default.trim(content);
+            }
+        }, {
+            key: "parseRepoContributors",
+            value: function parseRepoContributors(repo, htmlContributors) {
+                htmlContributors = this.parseContentWithNote(htmlContributors, 'Built by', '</a>');
+                var splitWitSemicolon = htmlContributors.split('"');
+                repo.contributorsUrl = splitWitSemicolon[1];
+                var contributors = [];
+
+                for (var i = 0; i < splitWitSemicolon.length; i++) {
+                    var url = splitWitSemicolon[i];
+
+                    if (url.search('http') !== -1) {
+                        contributors.push(url);
+                    }
+                }
+
+                repo.contributors = contributors;
+            }
+        }]);
+
+        return TrendingUtil;
+    }();
+
+    exports.default = TrendingUtil;
+},653,[654,655],"node_modules/GitHubTrending/trending/TrendingUtil.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var TrendingRepoModel = function TrendingRepoModel(fullName, url, description, language, meta, contributors, contributorsUrl, starCount, forkCount) {
+        _classCallCheck(this, TrendingRepoModel);
+
+        this.fullName = fullName;
+        this.url = url;
+        this.description = description;
+        this.language = language;
+        this.meta = meta;
+        this.contributors = contributors;
+        this.contributorsUrl = contributorsUrl;
+        this.starCount = starCount;
+        this.forkCount = forkCount;
+    };
+
+    exports.default = TrendingRepoModel;
+},654,[],"node_modules/GitHubTrending/trending/TrendingRepoModel.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+
+  var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+  function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+  var StringUtil = function () {
+    function StringUtil() {
+      _classCallCheck(this, StringUtil);
+    }
+
+    _createClass(StringUtil, null, [{
+      key: "trim",
+      value: function trim(text) {
+        if (typeof text == "string") {
+          return text.replace(/^\s*|\s*$/g, "");
+        } else {
+          return text;
+        }
+      }
+    }]);
+
+    return StringUtil;
+  }();
+
+  exports.default = StringUtil;
+},655,[],"node_modules/GitHubTrending/trending/StringUtil.js");
 require(52);
 require(11);
 //# sourceMappingURL=index.map

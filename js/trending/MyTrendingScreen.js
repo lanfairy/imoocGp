@@ -1,8 +1,13 @@
 import React from 'react';
-import {  Image, StyleSheet} from 'react-native';
-import { MyNavScreen } from '../commonComponents/MyNavScreen';
+import {  
+  Image,
+  View,
+  ListView, 
+  StyleSheet
+} from 'react-native';
+import { MyNavScreen, CommonNavScreen } from '../commonComponents/MyNavScreen';
 import { ThemeFlags } from '../config/ThemeConfig';
-
+import GlobalStyles from '../../res/style/GlobalStyles';
 
 class MyTrendingScreen extends React.Component {
 
@@ -17,7 +22,13 @@ class MyTrendingScreen extends React.Component {
 
   render() {
     const { navigation } = this.props;
-    return <MyNavScreen banner="Trending Tab" navigation={navigation} />;
+    return (
+      <CommonNavScreen navigation={navigation}>
+        <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>
+
+        </View>
+      </CommonNavScreen>
+    );
   }
 }
 MyTrendingScreen.navigationOptions = props => {
