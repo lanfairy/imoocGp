@@ -14,21 +14,39 @@ const MyPolularStack = createStackNavigator({
   }
 
 });
-MyPolularStack.navigationOptions = {
-  tabBarTestIDProps: {
-    testID: 'TEST_ID_POLULAR',
-    accessibilityLabel: 'TEST_ID_POLULAR_ACLBL',
-  },
-  tabBarLabel: ({ tintColor, focused }) => {
-
-    let color = focused ? ThemeFlags.Polular : tintColor;
-    return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>最热</Text>;
-  },
-  tabBarIcon: ({ tintColor, focused }) => {
-    let color = focused ? ThemeFlags.Polular : tintColor;
-    return <Image source={require('../../res/images/ic_polular.png')} style={[{ tintColor: color},styles.tabbarIcon]}/>
-    },
+MyPolularStack.navigationOptions = ({navigation})=>{
+  let tabBarVisible = true;
+  if(navigation.state.index > 0){
+    tabBarVisible = false;
+    return {
+      tabBarVisible,
+      tabBarLabel: ({ tintColor, focused }) => {
+        let color = focused ? ThemeFlags.Polular : tintColor;
+        return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>最热</Text>;
+      },
+    
+      tabBarIcon: ({ tintColor, focused }) => {
+        let color = focused ? ThemeFlags.Polular : tintColor;
+        return <Image source={require('../../res/images/ic_polular.png')} style={[{ tintColor: color},styles.tabbarIcon]}/>
+        },
+    }
+  }
 };
+// MyPolularStack.navigationOptions = {
+//   tabBarTestIDProps: {
+//     testID: 'TEST_ID_POLULAR',
+//     accessibilityLabel: 'TEST_ID_POLULAR_ACLBL',
+//   },
+//   tabBarLabel: ({ tintColor, focused }) => {
+
+//     let color = focused ? ThemeFlags.Polular : tintColor;
+//     return <Text style={[{color: color, fontSize: 11,marginBottom: 3}]}>最热</Text>;
+//   },
+//   tabBarIcon: ({ tintColor, focused }) => {
+//     let color = focused ? ThemeFlags.Polular : tintColor;
+//     return <Image source={require('../../res/images/ic_polular.png')} style={[{ tintColor: color},styles.tabbarIcon]}/>
+//     },
+// };
 const styles = StyleSheet.create({
   tabbarIcon: {
     width:25,

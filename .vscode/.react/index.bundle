@@ -79283,45 +79283,51 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       screen: _RepositoryDetail2.default
     }
   });
-  MyPolularStack.navigationOptions = {
-    tabBarTestIDProps: {
-      testID: 'TEST_ID_POLULAR',
-      accessibilityLabel: 'TEST_ID_POLULAR_ACLBL'
-    },
-    tabBarLabel: function tabBarLabel(_ref) {
-      var tintColor = _ref.tintColor,
-          focused = _ref.focused;
-      var color = focused ? _ThemeConfig.ThemeFlags.Polular : tintColor;
-      return _react2.default.createElement(
-        _reactNative.Text,
-        {
-          style: [{
-            color: color,
-            fontSize: 11,
-            marginBottom: 3
-          }],
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 25
-          }
+
+  MyPolularStack.navigationOptions = function (_ref) {
+    var navigation = _ref.navigation;
+    var tabBarVisible = true;
+
+    if (navigation.state.index > 0) {
+      tabBarVisible = false;
+      return {
+        tabBarVisible: tabBarVisible,
+        tabBarLabel: function tabBarLabel(_ref2) {
+          var tintColor = _ref2.tintColor,
+              focused = _ref2.focused;
+          var color = focused ? _ThemeConfig.ThemeFlags.Polular : tintColor;
+          return _react2.default.createElement(
+            _reactNative.Text,
+            {
+              style: [{
+                color: color,
+                fontSize: 11,
+                marginBottom: 3
+              }],
+              __source: {
+                fileName: _jsxFileName,
+                lineNumber: 25
+              }
+            },
+            "\u6700\u70ED"
+          );
         },
-        "\u6700\u70ED"
-      );
-    },
-    tabBarIcon: function tabBarIcon(_ref2) {
-      var tintColor = _ref2.tintColor,
-          focused = _ref2.focused;
-      var color = focused ? _ThemeConfig.ThemeFlags.Polular : tintColor;
-      return _react2.default.createElement(_reactNative.Image, {
-        source: _require(_dependencyMap[6], '../../res/images/ic_polular.png'),
-        style: [{
-          tintColor: color
-        }, styles.tabbarIcon],
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 29
+        tabBarIcon: function tabBarIcon(_ref3) {
+          var tintColor = _ref3.tintColor,
+              focused = _ref3.focused;
+          var color = focused ? _ThemeConfig.ThemeFlags.Polular : tintColor;
+          return _react2.default.createElement(_reactNative.Image, {
+            source: _require(_dependencyMap[6], '../../res/images/ic_polular.png'),
+            style: [{
+              tintColor: color
+            }, styles.tabbarIcon],
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 30
+            }
+          });
         }
-      });
+      };
     }
   };
 
@@ -82327,6 +82333,12 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _reactNative = _require(_dependencyMap[2], "react-native");
 
+  var _ViewUtils = _require(_dependencyMap[3], "../utils/ViewUtils");
+
+  var _ViewUtils2 = _interopRequireDefault(_ViewUtils);
+
+  var _ThemeConfig = _require(_dependencyMap[4], "../config/ThemeConfig");
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -82354,38 +82366,77 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     };
   }
 
+  var WEBVIEW_REF = 'webview';
+
   var RepositoryDetail = _wrapComponent("RepositoryDetail")(function (_Component) {
     _inherits(RepositoryDetail, _Component);
 
-    function RepositoryDetail() {
+    function RepositoryDetail(props) {
       _classCallCheck(this, RepositoryDetail);
 
-      return _possibleConstructorReturn(this, (RepositoryDetail.__proto__ || Object.getPrototypeOf(RepositoryDetail)).apply(this, arguments));
+      var _this = _possibleConstructorReturn(this, (RepositoryDetail.__proto__ || Object.getPrototypeOf(RepositoryDetail)).call(this, props));
+
+      _this.onNavigationStateChange = function (navState) {
+        _this.setState({
+          canGoBack: navState.canGoBack,
+          url: navState.url
+        });
+      };
+
+      _this._onBack = function () {
+        if (_this.state.canGoBack) {
+          _this.refs[WEBVIEW_REF].goBack();
+        } else {
+          _this.props.navigation.pop();
+        }
+      };
+
+      var rowData = _this.props.navigation.getParam('rowData');
+
+      _this.state = {
+        url: rowData.html_url,
+        canGoBack: false
+      };
+      return _this;
     }
 
     _createClass(RepositoryDetail, [{
+      key: "componentWillMount",
+      value: function componentWillMount() {
+        this.props.navigation.setParams({
+          onBack: this._onBack
+        });
+      }
+    }, {
       key: "render",
       value: function render() {
         return _react3.default.createElement(
           _reactNative.View,
           {
+            style: styles.flex,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 9
+              lineNumber: 28
             }
           },
-          _react3.default.createElement(
-            _reactNative.Text,
-            {
-              __source: {
-                fileName: _jsxFileName,
-                lineNumber: 10
-              }
+          _react3.default.createElement(_reactNative.WebView, {
+            ref: WEBVIEW_REF,
+            style: styles.flex,
+            source: {
+              uri: this.state.url
             },
-            " ",
-            this.props.navigation.getParam('rowData').html_url,
-            " "
-          )
+            startInLoadingState: true,
+            javaScriptEnabled: true,
+            domStorageEnabled: true,
+            scalesPageToFit: true,
+            decelerationRate: "normal",
+            automaticallyAdjustContentInsets: false,
+            onNavigationStateChange: this.onNavigationStateChange,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 29
+            }
+          })
         );
       }
     }]);
@@ -82394,7 +82445,32 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }(_react2.Component));
 
   exports.default = RepositoryDetail;
-},625,[118,130,12],"js/polular/RepositoryDetail.js");
+
+  RepositoryDetail.navigationOptions = function (props) {
+    var navigation = props.navigation;
+    var state = navigation.state,
+        setParams = navigation.setParams;
+    var params = state.params;
+    var title = navigation.getParam('rowData').full_name;
+    return {
+      headerTitle: title,
+      headerTintColor: '#FFF',
+      headerLeft: _ViewUtils2.default.getLeftBtn(navigation.getParam('onBack')),
+      headerStyle: {
+        backgroundColor: _ThemeConfig.ThemeFlags.Polular
+      }
+    };
+  };
+
+  var styles = _reactNative.StyleSheet.create({
+    flex: {
+      flex: 1
+    },
+    webView: {
+      flex: 1
+    }
+  });
+},625,[118,130,12,640,620],"js/polular/RepositoryDetail.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
