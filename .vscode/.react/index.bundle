@@ -79287,48 +79287,45 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   MyPolularStack.navigationOptions = function (_ref) {
     var navigation = _ref.navigation;
     var tabBarVisible = true;
-
-    if (navigation.state.index > 0) {
-      tabBarVisible = false;
-      return {
-        tabBarVisible: tabBarVisible,
-        tabBarLabel: function tabBarLabel(_ref2) {
-          var tintColor = _ref2.tintColor,
-              focused = _ref2.focused;
-          var color = focused ? _ThemeConfig.ThemeFlags.Polular : tintColor;
-          return _react2.default.createElement(
-            _reactNative.Text,
-            {
-              style: [{
-                color: color,
-                fontSize: 11,
-                marginBottom: 3
-              }],
-              __source: {
-                fileName: _jsxFileName,
-                lineNumber: 25
-              }
-            },
-            "\u6700\u70ED"
-          );
-        },
-        tabBarIcon: function tabBarIcon(_ref3) {
-          var tintColor = _ref3.tintColor,
-              focused = _ref3.focused;
-          var color = focused ? _ThemeConfig.ThemeFlags.Polular : tintColor;
-          return _react2.default.createElement(_reactNative.Image, {
-            source: _require(_dependencyMap[6], '../../res/images/ic_polular.png'),
+    if (navigation.state.index > 0) tabBarVisible = false;
+    return {
+      tabBarVisible: tabBarVisible,
+      tabBarLabel: function tabBarLabel(_ref2) {
+        var tintColor = _ref2.tintColor,
+            focused = _ref2.focused;
+        var color = focused ? _ThemeConfig.ThemeFlags.Polular : tintColor;
+        return _react2.default.createElement(
+          _reactNative.Text,
+          {
             style: [{
-              tintColor: color
-            }, styles.tabbarIcon],
+              color: color,
+              fontSize: 11,
+              marginBottom: 3
+            }],
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 30
+              lineNumber: 26
             }
-          });
-        }
-      };
-    }
+          },
+          "\u6700\u70ED"
+        );
+      },
+      tabBarIcon: function tabBarIcon(_ref3) {
+        var tintColor = _ref3.tintColor,
+            focused = _ref3.focused;
+        var color = focused ? _ThemeConfig.ThemeFlags.Polular : tintColor;
+        return _react2.default.createElement(_reactNative.Image, {
+          source: _require(_dependencyMap[6], '../../res/images/ic_polular.png'),
+          style: [{
+            tintColor: color
+          }, styles.tabbarIcon],
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 31
+          }
+        });
+      }
+    };
   };
 
   var styles = _reactNative.StyleSheet.create({
@@ -82611,40 +82608,17 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     _inherits(MyTrendingScreen, _React$Component);
 
     function MyTrendingScreen() {
-      var _ref;
-
-      var _temp, _this, _ret;
-
       _classCallCheck(this, MyTrendingScreen);
 
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MyTrendingScreen.__proto__ || Object.getPrototypeOf(MyTrendingScreen)).call.apply(_ref, [this].concat(args))), _this), _this._onEvent = function (a) {
-        console.log('EVENT ON Trending TAB', a.type, a);
-      }, _temp), _possibleConstructorReturn(_this, _ret);
+      return _possibleConstructorReturn(this, (MyTrendingScreen.__proto__ || Object.getPrototypeOf(MyTrendingScreen)).apply(this, arguments));
     }
 
     _createClass(MyTrendingScreen, [{
       key: "componentDidMount",
-      value: function componentDidMount() {
-        this._s0 = this.props.navigation.addListener('willFocus', this._onEvent);
-        this._s1 = this.props.navigation.addListener('didFocus', this._onEvent);
-        this._s2 = this.props.navigation.addListener('willBlur', this._onEvent);
-        this._s3 = this.props.navigation.addListener('didBlur', this._onEvent);
-      }
+      value: function componentDidMount() {}
     }, {
       key: "componentWillUnmount",
-      value: function componentWillUnmount() {
-        this._s0.remove();
-
-        this._s1.remove();
-
-        this._s2.remove();
-
-        this._s3.remove();
-      }
+      value: function componentWillUnmount() {}
     }, {
       key: "render",
       value: function render() {
@@ -82654,7 +82628,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           navigation: navigation,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 37
+            lineNumber: 20
           }
         });
       }
