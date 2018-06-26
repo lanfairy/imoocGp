@@ -21,9 +21,9 @@ import URLConfig from '../config/URLConfig';
 import {ThemeFlags} from '../config/ThemeConfig';
 import GlobalStyles from '../../res/style/GlobalStyles';
 import RepositoryCell from '../commonComponents/RepositoryCell';
-import DataRepository from '../expand/dao/DataRepository';
+import DataRepository, {FLAG_STORAGE} from '../expand/dao/DataRepository';
 
-var dataRepository = new DataRepository();
+var dataRepository = new DataRepository(FLAG_STORAGE.flag_popular);
 class PopularTab extends React.Component{
   constructor(props){
     super(props);
@@ -116,7 +116,8 @@ class PopularTab extends React.Component{
                   })
                   .then((items)=>{
                     // console.log(`----- ${items} --- ${Object.keys(items)}`);
-                    if(!items || items.length==0)return;
+                    //|| items.length==0
+                    if(!items )return;
                       this.refs.toast.show(`网络数据获取到 ${items.length} 条数据`);
                       // Alert.alert(`获取到 ${items.length} 条数据`);
                       this.setState({

@@ -97,11 +97,18 @@ export default class DataRepository{
     });
   }
 
-  saveRepository(url, items, callback) {
-        if (!items || !url)return;
+  saveRepository(url, items) {
+        if (!items || !url || items.length==0){
+          console.log('保存获取到的网络数据失败');
+          return;
+        }
         let wrapData={items:items,date:new Date().getTime()};
-        AsyncStorage.setItem(url, JSON.stringify(wrapData), callback);
-        console.log('保存获取到的网络数据');
+        AsyncStorage.setItem(url, JSON.stringify(wrapData), (error, result)=> {
+          if(error)
+            console.log(`保存获取到的网络数据失败  ${error}`);
+            else
+              console.log('保存获取到的网络数据');
+      });
     }
 
   removeRepository(url) {
@@ -111,7 +118,7 @@ export default class DataRepository{
     }
 
   checkDate(longTime) {
-    // if(!longTime)return false;
+
       let currentDate = new Date();
       let targetDate = new Date();
       targetDate.setTime(longTime);
