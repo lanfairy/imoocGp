@@ -79335,6 +79335,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   exports.default = MyPolularStack;
 },603,[118,12,495,604,620,625,626],"js/polular/MyPolularStack.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
+  'use strict';
+
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -79461,6 +79463,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         var URL = _URLConfig2.default.getSearchURL(_this.props.tabLabel);
 
         dataRepository.fetchRepository(URL).then(function (result) {
+          if (!result) return;
+
           _this.refs.toast.show("\u83B7\u53D6\u5230 " + result.items.length + " \u6761\u6570\u636E");
 
           var items = result && result.items ? result.items : result ? result : [];
@@ -79471,25 +79475,28 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             isLoadingFail: false
           });
 
-          if (result && result.date && !dataRepository.checkDate(result.date)) {
+          console.log("----- \u77AC\u77AC " + result.date);
+
+          if (result && result.date && dataRepository.checkDate(result.date)) {
+            console.log("----- \u91CD\u65B0\u83B7\u53D6\u7F51\u7EDC\u6570\u636E ");
             return dataRepository.fetchNetRepository(URL);
           }
-        }).then(function (result) {
-          console.log("----- " + result);
-          if (!result || !result.items || result.items.length == 0) return;
+        }).then(function (items) {
+          if (!items || items.length == 0) return;
 
-          _this.refs.toast.show("\u7F51\u7EDC\u6570\u636E\u83B7\u53D6\u5230 " + result.tems.length + " \u6761\u6570\u636E");
+          _this.refs.toast.show("\u7F51\u7EDC\u6570\u636E\u83B7\u53D6\u5230 " + items.length + " \u6761\u6570\u636E");
 
           _this.setState({
-            dataSource: _this.state.dataSource.cloneWithRows(result.items),
+            dataSource: _this.state.dataSource.cloneWithRows(items),
             isLoading: false,
             isLoadingFail: false
           });
         }).catch(function (error) {
+          console.log("[\u62A5\u9519] --- " + error);
+
           _this.refs.toast.show(error);
 
           _this.setState({
-            result: JSON.stringify(error),
             isLoading: false,
             isLoadingFail: true
           });
@@ -79502,7 +79509,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         }
       });
       _this.state = {
-        result: '',
         isLoading: false,
         isLoadingFail: false,
         dataSource: ds.cloneWithRows([])
@@ -79638,7 +79644,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             tabBarBackgroundColor: _ThemeConfig.ThemeFlags.Polular,
             ref: "scrollableTabView",
             initialPage: 0,
-            page: 0,
             tabBarUnderlineStyle: {
               height: 2,
               backgroundColor: 'mintcream'
@@ -79656,13 +79661,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 underlineHeight: 2,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 173
+                  lineNumber: 174
                 }
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 164
+              lineNumber: 166
             }
           },
           this.state.languages.map(function (result, i, arr) {
@@ -79673,7 +79678,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             }, _this4.props, {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 179
+                lineNumber: 180
               }
             })) : null;
           })
@@ -79684,7 +79689,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             navigation: navigation,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 185
+              lineNumber: 186
             }
           },
           _react3.default.createElement(
@@ -79695,7 +79700,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               }],
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 186
+                lineNumber: 187
               }
             },
             content
@@ -81992,6 +81997,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     _createClass(RepositoryCell, [{
       key: "render",
       value: function render() {
+        var _this2 = this;
+
         var rowData = this.state.rowData;
 
         var favoriteButton = _react3.default.createElement(
@@ -82024,7 +82031,9 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         return _react3.default.createElement(
           _reactNative.TouchableHighlight,
           {
-            onPress: this.props.onSelected(rowData),
+            onPress: function onPress() {
+              return _this2.props.onSelected(rowData);
+            },
             onShowUnderlay: this.props.onHighlight,
             underlayColor: "transparent",
             onHideUnderlay: this.props.onUnhighlight,
@@ -82205,6 +82214,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 resolve(result);
               }).catch(function (error) {
                 reject(error);
+                console.log("[\u672C\u5730\u6570\u636E0] - " + error);
               });
             }
           }).catch(function (error) {
@@ -82212,6 +82222,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               resolve(result);
             }).catch(function (error) {
               reject(error);
+              console.log("[\u672C\u5730\u6570\u636E00] - " + error);
             });
           });
         });
@@ -82226,9 +82237,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 resolve(JSON.parse(result));
               } catch (e) {
                 reject(e);
+                console.log("[\u672C\u5730\u6570\u636E] - " + e);
               }
             } else {
               reject(error);
+              console.log("[\u672C\u5730\u6570\u636E2] - " + error);
             }
           });
         });
@@ -82241,18 +82254,19 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         return new Promise(function (resolve, reject) {
           fetch(url).then(function (response) {
             return response.json();
-          }).then(function (result) {
-            if (!result) {
+          }).catch(function (error) {
+            console.log("[\u62A5\u9519 1] -- " + error);
+            reject(error);
+          }).then(function (responseData) {
+            if (!responseData || !responseData.items) {
               reject(new Error('responseData is null'));
               return;
             }
 
-            resolve(result);
+            resolve(responseData.items);
 
-            _this2.saveRepository(url, result.items);
-          }).catch(function (error) {
-            reject(error);
-          });
+            _this2.saveRepository(url, responseData.items);
+          }).done();
         });
       }
     }, {
@@ -82357,7 +82371,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 7
+              lineNumber: 9
             }
           },
           _react3.default.createElement(
@@ -82365,11 +82379,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 8
+                lineNumber: 10
               }
             },
             " ",
-            JSON.stringify(this.props.navigation.getParam('rowData')),
+            this.props.navigation.getParam('rowData').html_url,
             " "
           )
         );

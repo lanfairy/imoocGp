@@ -1,3 +1,4 @@
+'use strict'
 import React from 'react';
 import {
   View,
@@ -29,7 +30,6 @@ class PopularTab extends React.Component{
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     // this.dataRepository = new DataRepository();
     this.state = {
-      result: '',
       isLoading: false,
       isLoadingFail: false,
       dataSource: ds.cloneWithRows([]),
@@ -100,6 +100,7 @@ class PopularTab extends React.Component{
 
     dataRepository.fetchRepository(URL)
                   .then((result)=>{
+                    if(!result)return;
                     this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
                     let items = result&&result.items ? result.items : result ? result : [];
                     this.setState({
@@ -107,26 +108,27 @@ class PopularTab extends React.Component{
                       isLoading: false,
                       isLoadingFail: false,
                     });
-                    if(result&&result.date&&!dataRepository.checkDate(result.date)){
+                    console.log(`----- 瞬瞬 ${result.date}`);
+                    if(result&&result.date&&dataRepository.checkDate(result.date)){
+                      console.log(`----- 重新获取网络数据 `);
                       return dataRepository.fetchNetRepository(URL);
                     }
-
                   })
-                  .then((result)=>{
-                    console.log(`----- ${result}`);
-                    if(!result || !result.items || result.items.length==0)return;
-                      this.refs.toast.show(`网络数据获取到 ${result.tems.length} 条数据`);
-                      // Alert.alert(`获取到 ${result.items.length} 条数据`);
+                  .then((items)=>{
+                    // console.log(`----- ${items} --- ${Object.keys(items)}`);
+                    if(!items || items.length==0)return;
+                      this.refs.toast.show(`网络数据获取到 ${items.length} 条数据`);
+                      // Alert.alert(`获取到 ${items.length} 条数据`);
                       this.setState({
-                        dataSource: this.state.dataSource.cloneWithRows(result.items),
+                        dataSource: this.state.dataSource.cloneWithRows(items),
                         isLoading: false,
                         isLoadingFail: false,
                       })
                   })
                   .catch(error=>{
+                    console.log(`[报错] --- ${error}`);
                     this.refs.toast.show(error);
                     this.setState({
-                      result: JSON.stringify(error),
                       isLoading: false,
                       isLoadingFail: true,
                     })
@@ -168,7 +170,6 @@ export default class MyPolularScreen extends React.Component{
                 tabBarBackgroundColor={ThemeFlags.Polular}
                 ref="scrollableTabView"
                 initialPage={0}
-                page={0}
                 tabBarUnderlineStyle = {{height:2, backgroundColor:'mintcream'}}
                 renderTabBar={() => <ScrollableTabBar style={{height: 40,borderWidth:0,elevation:2}} tabStyle={{height: 39}}
                                                       underlineHeight={2}/>}

@@ -19,6 +19,7 @@ export default class DataRepository{
                   })
                   .catch(error=>{
                     reject(error);
+                    console.log(`[本地数据0] - ${error}`);
                   })
             }
 
@@ -30,6 +31,7 @@ export default class DataRepository{
                 })
                 .catch(error=>{
                   reject(error);
+                  console.log(`[本地数据00] - ${error}`);
                 })
           })
     });
@@ -40,14 +42,15 @@ export default class DataRepository{
 
                   if (!error) {
                       try {
+                        // console.log(`[本地数据] - ${result}`);
                           resolve(JSON.parse(result));
                       } catch (e) {
                           reject(e);
-                          // console.error(e);
+                          console.log(`[本地数据] - ${e}`);
                       }
                   } else {
                       reject(error);
-                      // console.error(error);
+                      console.log(`[本地数据2] - ${error}`);
                   }
               });
           });
@@ -55,31 +58,33 @@ export default class DataRepository{
 
   fetchNetRepository(url){
     return new Promise((resolve,reject)=>{
+      // fetch(url)
+      //     .then(response=>response.json())
+      //     .then(result=>{
+      //       if(!result){
+      //         reject(new Error('responseData is null'));
+      //       return;
+      //     }
+      //       resolve(result.items);
+      //       this.saveRepository(url,result.items);
+      //     })
+      //     .catch(error=>{
+      //       reject(error);
+      //     })
       fetch(url)
-          .then(response=>response.json())
-          .then(result=>{
-            if(!result){
-              reject(new Error('responseData is null'));
-            return;
-          }
-            resolve(result);
-            this.saveRepository(url,result.items);
-          })
-          .catch(error=>{
-            reject(error);
-          })
+            .then((response)=>response.json())
+            .catch((error)=> {
+              console.log(`[报错 1] -- ${error}`);
+                reject(error);
+            }).then((responseData)=> {
+                if (!responseData||!responseData.items) {
+                    reject(new Error('responseData is null'));
+                    return;
+                }
+                resolve(responseData.items);
+                this.saveRepository(url,responseData.items)
+        }).done();
     });
-    // return new Promise((resolve,reject)=>{
-    //   fetch(url)
-    //     .then(response=>response.json())
-    //     .then(result=>{
-    //       resolve(result);
-    //       this.saveRepository(url,result.items);
-    //     })
-    //     .catch(error=>{
-    //       reject(error);
-    //     })
-    // })
   }
 
   saveRepository(url, items, callback) {
@@ -96,6 +101,7 @@ export default class DataRepository{
     }
 
   checkDate(longTime) {
+    // if(!longTime)return false;
       let currentDate = new Date();
       let targetDate = new Date();
       targetDate.setTime(longTime);
