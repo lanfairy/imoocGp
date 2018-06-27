@@ -16,7 +16,7 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 import LanguageDao, { FLAG_LANGUAGE } from '../expand/dao/LanguageDao';
 
 import {MyNavScreen,CommonNavScreen} from '../commonComponents/MyNavScreen';
-import HttpUtils from '../utils/HttpUtils';
+// import HttpUtils from '../utils/HttpUtils';
 import URLConfig from '../config/URLConfig';
 import {ThemeFlags} from '../config/ThemeConfig';
 import GlobalStyles from '../../res/style/GlobalStyles';
