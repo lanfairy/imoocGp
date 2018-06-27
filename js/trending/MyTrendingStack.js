@@ -3,11 +3,15 @@ import { Text, Image, StyleSheet} from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import MyTrendingScreen from './MyTrendingScreen';
 import { ThemeFlags } from '../config/ThemeConfig';
+import WebViewPage from './WebViewPage';
 
 const MyTrendingStack = createStackNavigator({
   TrendingHome: {
     screen: MyTrendingScreen,
   },
+  webViewPage: {
+    screen: WebViewPage,
+  }
 
 });
 MyTrendingStack.navigationOptions = ({navigation})=> {

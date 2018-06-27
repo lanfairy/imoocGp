@@ -10,11 +10,15 @@ import {
   ListView,
   DeviceEventEmitter,
 } from 'react-native';
+import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
+import Toast, { DURATION } from 'react-native-easy-toast';
+import LanguageDao, { FLAG_LANGUAGE } from '../expand/dao/LanguageDao';
+
 import { MyNavScreen, CommonNavScreen } from '../commonComponents/MyNavScreen';
 import URLConfig from '../config/URLConfig';
 import {ThemeFlags} from '../config/ThemeConfig';
 import GlobalStyles from '../../res/style/GlobalStyles';
-import RepositoryCell from '../commonComponents/RepositoryCell';
+import TrendingRepoCell from '../trending/TrendingRepoCell';
 import DataRepository, {FLAG_STORAGE} from '../expand/dao/DataRepository';
 
 
@@ -81,7 +85,7 @@ class MyTrendingTab extends React.Component {
   };
   _renderRow = (rowData)=>{
     return(
-      <RepositoryCell rowData={rowData} onSelected={this.onSelectRepository}/>
+      <TrendingRepoCell rowData={rowData} onSelected={this.onSelectRepository}/>
     )
   };
   _onRefresh = ()=>{
@@ -112,16 +116,14 @@ class MyTrendingTab extends React.Component {
                     }
                   })
                   .then((items)=>{
-                    // console.log(`----- ${items} --- ${Object.keys(items)}`);
-                    //|| items.length==0
-                    if(!items )return;
-                      this.refs.toast.show(`网络数据获取到 ${items.length} 条数据`);
-                      // Alert.alert(`获取到 ${items.length} 条数据`);
-                      this.setState({
-                        dataSource: this.state.dataSource.cloneWithRows(items),
-                        isLoading: false,
-                        isLoadingFail: false,
-                      })
+                    // if(!items )return;
+                    //   this.refs.toast.show(`网络数据获取到 ${items.length} 条数据`);
+                    //   // Alert.alert(`获取到 ${items.length} 条数据`);
+                    //   this.setState({
+                    //     dataSource: this.state.dataSource.cloneWithRows(items),
+                    //     isLoading: false,
+                    //     isLoadingFail: false,
+                    //   })
                   })
                   .catch(error=>{
                     console.log(`[报错] --- ${error}`);
@@ -173,7 +175,7 @@ export default class MyTrendingScreen extends React.Component{
                 {this.state.languages.map((result, i, arr)=> {
                     let language = result;
                     return language && language.checked ?
-                        <PopularTab key={i} tabLabel={language.name} {...this.props}/> : null;
+                        <MyTrendingTab key={i} tabLabel={language.name} {...this.props}/> : null;
                 })}
             </ScrollableTabView>
             : null;
