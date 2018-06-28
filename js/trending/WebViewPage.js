@@ -9,7 +9,8 @@ import ViewUtils from '../utils/ViewUtils';
 
 const WEBVIEW_REF = 'webview';
 export default class WebViewPage extends Component {
-    constructor(){
+    constructor(props){
+        super(props);
         let url = this.props.navigation.getParam('url');
         this.state={
             url: url,

@@ -102,8 +102,8 @@ class MyTrendingTab extends React.Component {
     dataRepository.fetchRepository(URL)
                   .then((result)=>{
                     if(!result)return;
-                    this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
                     let items = result&&result.items ? result.items : result ? result : [];
+                    // this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
                     this.setState({
                       dataSource: this.state.dataSource.cloneWithRows(items),
                       isLoading: false,
@@ -116,14 +116,14 @@ class MyTrendingTab extends React.Component {
                     }
                   })
                   .then((items)=>{
-                    // if(!items )return;
-                    //   this.refs.toast.show(`网络数据获取到 ${items.length} 条数据`);
-                    //   // Alert.alert(`获取到 ${items.length} 条数据`);
-                    //   this.setState({
-                    //     dataSource: this.state.dataSource.cloneWithRows(items),
-                    //     isLoading: false,
-                    //     isLoadingFail: false,
-                    //   })
+                    if(!items )return;
+                      // this.refs.toast.show(`网络数据获取到 ${items.length} 条数据`);
+                      // Alert.alert(`获取到 ${items.length} 条数据`);
+                      this.setState({
+                        dataSource: this.state.dataSource.cloneWithRows(items),
+                        isLoading: false,
+                        isLoadingFail: false,
+                      })
                   })
                   .catch(error=>{
                     console.log(`[报错] --- ${error}`);

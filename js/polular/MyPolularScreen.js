@@ -101,8 +101,8 @@ class PopularTab extends React.Component{
     dataRepository.fetchRepository(URL)
                   .then((result)=>{
                     if(!result)return;
-                    this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
                     let items = result&&result.items ? result.items : result ? result : [];
+                    this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
                     this.setState({
                       dataSource: this.state.dataSource.cloneWithRows(items),
                       isLoading: false,

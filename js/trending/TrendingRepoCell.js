@@ -5,6 +5,7 @@ import {
     StyleSheet,
     Text,
     TouchableHighlight,
+    TouchableOpacity,
     TouchableNativeFeedback,
     View,
     Alert, 
@@ -25,7 +26,8 @@ import GlobalStyles from '../../res/style/GlobalStyles';
  * : require('../../res/images/ic_unstar_transparent.png')
  */
 export default class TrendingRepoCell extends Component {
-    constructor(){
+    constructor(props){
+        super(props);
         this.state = {
             favoriteIcon:  require('../../res/images/ic_star.png'),
         }
@@ -42,22 +44,23 @@ export default class TrendingRepoCell extends Component {
     return (
     <TouchableElement 
         onPress={this.props.onSelect}
-        onShowUnderlay={this.props.onHighlight}
+        // onShowUnderlay={this.props.onHighlight}
+        // onHideUnderlay={this.props.onUnhighlight}
+        activeOpacity={0.2}
         underlayColor='transparent'
-        onHideUnderlay={this.props.onUnhighlight}
     >
       <View style={GlobalStyles.cell_container}>
         <View>
             <Text style={styles.title}>{item.fullName}</Text>
         </View>
         <HTMLView 
-            value={describe}
+            value={description}
             onLinkPress={(url)=>{
                 this.props.navigation.navigate('webViewPage',{url:url});
             }}
             stylesheet={{
                 p: styles.description,
-                a: styles.description,
+                a: [styles.description,styles.description_a],
             }}
         />
         <Text style={[styles.description,{fontSize: 14}]}>{item.meta}</Text>
@@ -102,6 +105,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginBottom: 2,
         color: '#757575'
+    },
+    description_a: {
+        color: '#03A9F4',
     },
     author: {
         fontSize: 14,
