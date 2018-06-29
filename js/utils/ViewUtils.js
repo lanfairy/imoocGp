@@ -55,6 +55,16 @@ export default class ViewUtils {
     );
   }
 
+  // static getRenderTitleView(callBack,icon,text){
+  //   return (
+  //     <TouchableHighlight
+  //       onPress={callBack}
+  //       style={}
+  //       >
+
+  //       </TouchableHighlight>
+  //   )
+  // }
 
 }
 

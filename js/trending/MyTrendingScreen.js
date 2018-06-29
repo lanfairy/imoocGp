@@ -11,9 +11,10 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
+import Popover from '../commonComponents/Popover';
 import Toast, { DURATION } from 'react-native-easy-toast';
 import LanguageDao, { FLAG_LANGUAGE } from '../expand/dao/LanguageDao';
-
+import TimeSpan from '../mode/TimeSpan';
 import { MyNavScreen, CommonNavScreen } from '../commonComponents/MyNavScreen';
 import URLConfig from '../config/URLConfig';
 import {ThemeFlags} from '../config/ThemeConfig';
@@ -23,6 +24,9 @@ import DataRepository, {FLAG_STORAGE} from '../expand/dao/DataRepository';
 
 
 var dataRepository=new DataRepository(FLAG_STORAGE.flag_trending)
+var timeSpanTextArray = [new TimeSpan('Today', 'since=daily'),
+new TimeSpan('This Week', 'since=weekly'), new TimeSpan('This Month', 'since=monthly')];
+
 class MyTrendingTab extends React.Component {
 
   constructor(props){
@@ -83,6 +87,7 @@ class MyTrendingTab extends React.Component {
     const {navigation} = this.props;
     navigation.navigate('RepositoryDetail',{rowData: rowData});
   };
+
   _renderRow = (rowData)=>{
     return(
       <TrendingRepoCell rowData={rowData} onSelected={this.onSelectRepository}/>
@@ -94,6 +99,7 @@ class MyTrendingTab extends React.Component {
   _loadData = (isRefresh)=>{
     this.setState({
       isLoading: true,
+      
     })
     let timeSpan = 'since=daily';
     let URL = URLConfig.getTrendingUrl(this.props.tabLabel);
@@ -135,18 +141,43 @@ class MyTrendingTab extends React.Component {
                   });
   };
 }
+
+
+
+
 export default class MyTrendingScreen extends React.Component{
   constructor(props){
     super(props);
     this.languageDao = new LanguageDao(FLAG_LANGUAGE.flag_language);
     this.state = {
       languages: [],
-    }
+      isVisible: false,
+      buttonRect: {},
+    };
   }
 
   componentDidMount(){
     this.loadLanguages();
   }
+  componentWillMount(){
+    this.props.navigation.setParams({
+      showPopover: this.showPopover,
+      showText: this.showText,
+    })
+  }
+  showPopover = ()=> {
+      this.props.navigation.getParam('headerViewBtn').measure((ox, oy, width, height, px, py) => {
+          this.setState({
+              isVisible: true,
+              buttonRect: {x: px, y: py, width: width, height: height}
+          });
+      });
+  };
+
+  closePopover = ()=> {
+      this.setState({isVisible: false});
+  };
+
   loadLanguages(){
     this.languageDao.fetch()
         .then((languages)=>{
@@ -157,6 +188,7 @@ export default class MyTrendingScreen extends React.Component{
 
         });
   }
+
   render(){
     const { navigation } = this.props;
 
@@ -180,10 +212,33 @@ export default class MyTrendingScreen extends React.Component{
             </ScrollableTabView>
             : null;
 
+    let timeSpanView=
+      <Popover
+          isVisible={this.state.isVisible}
+          fromRect={this.state.buttonRect}
+          placement="bottom"
+          onClose={this.closePopover}
+          contentStyle={{opacity:0.82,backgroundColor:'#343434'}}
+          style={{backgroundColor: 'red'}}>
+          <View style={{alignItems: 'center'}}>
+              {timeSpanTextArray.map((result, i, arr) => {
+                  return <TouchableHighlight key={i} onPress={()=>this.onSelectTimeSpan(arr[i])}
+                                              underlayColor='transparent'>
+                      <Text
+                          style={{fontSize: 18,color:'white', padding: 8, fontWeight: '400'}}>
+                          {arr[i].showText}
+                      </Text>
+                  </TouchableHighlight>
+              })
+              }
+          </View>
+      </Popover> ;
+
     return (
       <CommonNavScreen navigation={navigation}>
         <View style={[GlobalStyles.listView_container,{paddingTop: 0}]}>
           {content}
+          {timeSpanView}
         </View>
       </CommonNavScreen>
     )
@@ -194,8 +249,31 @@ MyTrendingScreen.navigationOptions = props => {
   const { navigation } = props;
   const { state, setParams } = navigation;
   const { params } = state;
+  let showPopover = navigation.getParam('showPopover');
+  let showText = navigation.getParam('showText');
+  let titleView =   
+      <View >
+      <TouchableHighlight
+          underlayColor='transparent'
+          onPress={showPopover}>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Text style={{
+                  fontSize: 18,
+                  color: '#FFFFFF',
+                  fontWeight: '400'
+              }}>Trending {showText}</Text>
+              <Image
+                  style={{width: 12, height: 12, marginLeft: 5}}
+                  source={require('../../res/images/ic_spinner_triangle.png')}
+              />
+          </View>
+      </TouchableHighlight>
+    </View>;
+    navigation.setParams({
+      headerViewBtn: titleView
+    });
   return {
-    headerTitle: `趋势`,
+    headerTitle: titleView,
     headerTintColor: '#FFF',
     headerRight: (
       null
