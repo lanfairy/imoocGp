@@ -6,6 +6,7 @@ import CustomKeyPage from './CustomKeyPage';
 import SortKeyPage from './SortKeyPage';
 import  { ThemeFlags } from '../config/ThemeConfig';
 
+import TestPopover from '../commonComponents/testPopover';
 const MyMineStack = createStackNavigator({
   MineHome: {
     screen: MyMineScreen,
@@ -15,6 +16,9 @@ const MyMineStack = createStackNavigator({
   },
   SortKey:{
     screen: SortKeyPage,
+  },
+  testPopover: {
+    screen: TestPopover,
   }
 
 });

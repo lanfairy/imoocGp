@@ -14,6 +14,8 @@ import { CommonNavScreen } from '../commonComponents/MyNavScreen';
 import { ThemeFlags } from '../config/ThemeConfig';
 import GlobalStyles from '../../res/style/GlobalStyles';
 import  { FLAG_LANGUAGE } from '../expand/dao/LanguageDao';
+
+
 // const MyMineScreen = ({ navigation }) => (
 //   <MyNavScreen banner="Mine Tab" navigation={navigation} />
 // );
@@ -31,6 +33,9 @@ class MyMineScreen extends React.Component{
         </View>
         <View>
           <Text onPress={()=>navigation.navigate('CustomKey',{flag: FLAG_LANGUAGE.flag_key,isRemoveKey:true})} style={{fontSize: 20, margin: 20, backgroundColor: 'red'}}>标签移除</Text>
+        </View>
+        <View>
+          <Text onPress={()=>navigation.navigate('testPopover')}>testPopover</Text>
         </View>
       </View>
             ;
