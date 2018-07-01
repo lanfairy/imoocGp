@@ -25,6 +25,30 @@ saveFavoriteItem(key, value, callback){
         }
     })
   }
+
+  removeFavoriteItem(key){
+      AsyncStorage.setItem(key,(error)=>{
+          if(!error){
+              this.updateFavoriteKeys(key, false);
+          }
+      })
+  }
+
+  getFavoriteKeys(){
+      return new Promise((resolve, reject)=>{
+          AsyncStorage.getItem(this.favoriteKey, (error, result) =>{
+              if(!error){
+                  try{
+                      resolve(JSON.parse(result));
+                  }catch(e){
+                    reject(e);
+                  }
+              }else{
+                  reject(error);
+              }
+          })
+      })
+  }
 /**
  *
  *
