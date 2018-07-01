@@ -79392,6 +79392,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
   var _DataRepository2 = _interopRequireDefault(_DataRepository);
 
+  var _ProjectModel = _require(_dependencyMap[12], "../mode/ProjectModel");
+
+  var _ProjectModel2 = _interopRequireDefault(_ProjectModel);
+
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -79432,26 +79436,42 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
       var _this = _possibleConstructorReturn(this, (PopularTab.__proto__ || Object.getPrototypeOf(PopularTab)).call(this, props));
 
-      _this.onSelectRepository = function (rowData) {
+      _this.onSelectRepository = function (projectModel) {
         var navigation = _this.props.navigation;
         navigation.navigate('RepositoryDetail', {
-          rowData: rowData
+          projectModel: projectModel
         });
       };
 
-      _this._renderRow = function (rowData) {
+      _this.onFavorite = function (item, isFavorite) {};
+
+      _this._renderRow = function (projectModel) {
         return _react3.default.createElement(_RepositoryCell2.default, {
-          rowData: rowData,
+          projectModel: projectModel,
           onSelected: _this.onSelectRepository,
+          onFavorite: _this.onFavorite,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 88
+            lineNumber: 92
           }
         });
       };
 
       _this._onRefresh = function () {
         _this._loadData(true);
+      };
+
+      _this.flushFavoriteState = function () {
+        var projectModels = [];
+        var items = _this.items;
+        items.forEach(function (val, i, arr) {
+          projectModels.push(new _ProjectModel2.default(val, false));
+        });
+
+        _this.updateState({
+          isLoading: false,
+          dataSource: _this.getDataSource(projectModels)
+        });
       };
 
       _this._loadData = function (isRefresh) {
@@ -79463,15 +79483,9 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
         dataRepository.fetchRepository(URL).then(function (result) {
           if (!result) return;
-          var items = result && result.items ? result.items : result ? result : [];
+          _this.items = result && result.items ? result.items : result ? result : [];
 
-          _this.refs.toast.show("\u83B7\u53D6\u5230 " + result.items.length + " \u6761\u6570\u636E");
-
-          _this.setState({
-            dataSource: _this.state.dataSource.cloneWithRows(items),
-            isLoading: false,
-            isLoadingFail: false
-          });
+          _this.flushFavoriteState();
 
           console.log("----- \u77AC\u77AC " + result.date);
 
@@ -79480,21 +79494,19 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             return dataRepository.fetchNetRepository(URL);
           }
         }).then(function (items) {
-          if (!items) return;
+          if (!items || items.length == 0) return;
 
           _this.refs.toast.show("\u7F51\u7EDC\u6570\u636E\u83B7\u53D6\u5230 " + items.length + " \u6761\u6570\u636E");
 
-          _this.setState({
-            dataSource: _this.state.dataSource.cloneWithRows(items),
-            isLoading: false,
-            isLoadingFail: false
-          });
+          _this.items = items;
+
+          _this.flushFavoriteState();
         }).catch(function (error) {
           console.log("[\u62A5\u9519] --- " + error);
 
           _this.refs.toast.show(error);
 
-          _this.setState({
+          _this.updateState({
             isLoading: false,
             isLoadingFail: true
           });
@@ -79532,7 +79544,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 40
+            lineNumber: 41
           }
         });
 
@@ -79546,7 +79558,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               },
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 54
+                lineNumber: 55
               }
             });
           },
@@ -79559,12 +79571,12 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             colors: [_ThemeConfig.ThemeFlags.Polular, _ThemeConfig.ThemeFlags.Polular, _ThemeConfig.ThemeFlags.Polular],
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 59
+              lineNumber: 60
             }
           }),
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 50
+            lineNumber: 51
           }
         });
 
@@ -79576,7 +79588,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             }],
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 69
+              lineNumber: 70
             }
           },
           content,
@@ -79591,6 +79603,17 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }, {
       key: "componentWillUnmount",
       value: function componentWillUnmount() {}
+    }, {
+      key: "getDataSource",
+      value: function getDataSource(data) {
+        return this.state.dataSource.cloneWithRows(data);
+      }
+    }, {
+      key: "updateState",
+      value: function updateState(dic) {
+        if (!this) return;
+        this.setState(dic);
+      }
     }]);
 
     return PopularTab;
@@ -79659,13 +79682,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 underlineHeight: 2,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 175
+                  lineNumber: 193
                 }
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 167
+              lineNumber: 185
             }
           },
           this.state.languages.map(function (result, i, arr) {
@@ -79676,7 +79699,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             }, _this4.props, {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 181
+                lineNumber: 199
               }
             })) : null;
           })
@@ -79687,7 +79710,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             navigation: navigation,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 187
+              lineNumber: 205
             }
           },
           _react3.default.createElement(
@@ -79698,7 +79721,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               }],
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 188
+                lineNumber: 206
               }
             },
             content
@@ -79743,7 +79766,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       backgroundColor: '#FFF'
     }
   });
-},604,[118,130,12,605,611,612,615,618,619,620,621,623],"js/polular/MyPolularScreen.js");
+},604,[118,130,12,605,611,612,615,618,619,620,621,623,701],"js/polular/MyPolularScreen.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -81935,11 +81958,23 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
       var _this = _possibleConstructorReturn(this, (RepositoryCell.__proto__ || Object.getPrototypeOf(RepositoryCell)).call(this, props));
 
-      _this.onPressFavorite = function () {};
+      _this.setFavoriteState = function (isFavorite) {
+        _this.setState({
+          isFavorite: isFavorite,
+          favoriteIcon: isFavorite ? _require(_dependencyMap[4], '../../res/images/ic_star.png') : _require(_dependencyMap[5], '../../res/images/ic_unstar_transparent.png')
+        });
+      };
+
+      _this.onPressFavorite = function () {
+        _this.setFavoriteState(!_this.state.isFavorite);
+
+        _this.props.onFavorite(_this.props.projectModel.item, _this.state.isFavorite);
+      };
 
       _this.state = {
-        rowData: _this.props.rowData,
-        favoriteIcon: _require(_dependencyMap[4], '../../res/images/ic_star.png')
+        item: _this.props.projectModel.item ? _this.props.projectModel.item : _this.props.projectModel,
+        isFavorite: _this.props.projectModel.isFavorite,
+        favoriteIcon: _this.props.projectModel.isFavorite ? _require(_dependencyMap[4], '../../res/images/ic_star.png') : _require(_dependencyMap[5], '../../res/images/ic_unstar_transparent.png')
       };
       return _this;
     }
@@ -81949,10 +81984,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       value: function render() {
         var _this2 = this;
 
-        var rowData = this.state.rowData;
+        var item = this.state.item;
 
         var favoriteButton = _react3.default.createElement(
-          _reactNative.TouchableHighlight,
+          _reactNative.TouchableOpacity,
           {
             style: {
               padding: 6
@@ -81961,7 +81996,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             underlayColor: "transparent",
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 27
+              lineNumber: 36
             }
           },
           _react3.default.createElement(_reactNative.Image, {
@@ -81969,27 +82004,30 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             style: [{
               width: 22,
               height: 22
+            }, {
+              tintColor: '#2196F3'
             }],
             source: this.state.favoriteIcon,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 31
+              lineNumber: 40
             }
           })
         );
 
+        var TouchableElement = _reactNative.TouchableOpacity;
         return _react3.default.createElement(
-          _reactNative.TouchableHighlight,
+          TouchableElement,
           {
             onPress: function onPress() {
-              return _this2.props.onSelected(rowData);
+              return _this2.props.onSelected(item);
             },
             onShowUnderlay: this.props.onHighlight,
             underlayColor: "transparent",
             onHideUnderlay: this.props.onUnhighlight,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 37
+              lineNumber: 47
             }
           },
           _react3.default.createElement(
@@ -81998,7 +82036,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               style: [_GlobalStyles2.default.cell_container],
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 43
+                lineNumber: 53
               }
             },
             _react3.default.createElement(
@@ -82007,10 +82045,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 style: styles.title,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 44
+                  lineNumber: 54
                 }
               },
-              rowData.full_name
+              item.full_name
             ),
             _react3.default.createElement(
               _reactNative.Text,
@@ -82018,10 +82056,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 style: styles.description,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 45
+                  lineNumber: 55
                 }
               },
-              rowData.description
+              item.description
             ),
             _react3.default.createElement(
               _reactNative.View,
@@ -82033,7 +82071,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 },
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 46
+                  lineNumber: 56
                 }
               },
               _react3.default.createElement(
@@ -82045,7 +82083,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 47
+                    lineNumber: 57
                   }
                 },
                 _react3.default.createElement(
@@ -82054,19 +82092,19 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                     style: styles.author,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 48
+                      lineNumber: 58
                     }
                   },
                   "Author: "
                 ),
                 _react3.default.createElement(_reactNative.Image, {
                   source: {
-                    uri: rowData.owner.avatar_url
+                    uri: item.owner.avatar_url
                   },
                   style: _GlobalStyles2.default.cell_img_owner_avatar,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 49
+                    lineNumber: 59
                   }
                 })
               ),
@@ -82075,7 +82113,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 {
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 51
+                    lineNumber: 61
                   }
                 },
                 _react3.default.createElement(
@@ -82083,10 +82121,10 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 52
+                      lineNumber: 62
                     }
                   },
-                  "Starts:  " + rowData.stargazers_count
+                  "Starts:  " + item.stargazers_count
                 )
               ),
               favoriteButton
@@ -82119,7 +82157,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       color: '#757575'
     }
   });
-},621,[118,130,12,620,622],"js/commonComponents/RepositoryCell.js");
+},621,[118,130,12,620,622,700],"js/commonComponents/RepositoryCell.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -95400,6 +95438,31 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "type": "png"
   });
 },698,[326],"res/images/ic_spinner_triangle.png");
+__d(function (global, _require, module, exports, _dependencyMap) {
+  module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
+    "__packager_asset": true,
+    "httpServerLocation": "/assets/res/images",
+    "width": 50,
+    "height": 48,
+    "scales": [1, 2, 3],
+    "hash": "3510f25ea36df7a55a1c524247c0bd22",
+    "name": "ic_unstar_transparent",
+    "type": "png"
+  });
+},700,[326],"res/images/ic_unstar_transparent.png");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    exports.default = ProjectModel;
+
+    function ProjectModel(item, isFavorite) {
+        this.item = item;
+        this.isFavorite = isFavorite;
+    }
+},701,[],"js/mode/ProjectModel.js");
 require(52);
 require(11);
 //# sourceMappingURL=index.map

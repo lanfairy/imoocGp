@@ -22,6 +22,7 @@ import {ThemeFlags} from '../config/ThemeConfig';
 import GlobalStyles from '../../res/style/GlobalStyles';
 import RepositoryCell from '../commonComponents/RepositoryCell';
 import DataRepository, {FLAG_STORAGE} from '../expand/dao/DataRepository';
+import ProjectModel from '../mode/ProjectModel';
 
 var dataRepository = new DataRepository(FLAG_STORAGE.flag_popular);
 class PopularTab extends React.Component{
@@ -79,18 +80,46 @@ class PopularTab extends React.Component{
   componentWillUnmount(){
 
   }
-  onSelectRepository=(rowData)=>{
+  onSelectRepository=(projectModel)=>{
     const {navigation} = this.props;
-    navigation.navigate('RepositoryDetail',{rowData: rowData});
+    navigation.navigate('RepositoryDetail',{projectModel: projectModel});
   };
-  _renderRow = (rowData)=>{
+  onFavorite = (item, isFavorite)=>{
+
+  };
+  _renderRow = (projectModel)=>{
     return(
-      <RepositoryCell rowData={rowData} onSelected={this.onSelectRepository}/>
+      <RepositoryCell 
+        projectModel={projectModel}
+        onSelected={this.onSelectRepository}
+        onFavorite={this.onFavorite}
+        />
     )
   };
   _onRefresh = ()=>{
     this._loadData(true);
   };
+  /**
+   * 更新 project item 的收藏状态
+   */
+  flushFavoriteState = ()=>{
+    let projectModels = [];
+    let items = this.items;
+    items.forEach((val, i , arr)=>{
+      projectModels.push(new ProjectModel(val, false));
+    });
+    this.updateState({
+      isLoading: false,
+      dataSource: this.getDataSource(projectModels)
+    });
+  };
+  getDataSource(data){
+    return this.state.dataSource.cloneWithRows(data);
+  }
+  updateState(dic){
+    if(!this) return;
+    this.setState(dic);
+  }
   _loadData = (isRefresh)=>{
     this.setState({
       isLoading: true,
@@ -101,13 +130,8 @@ class PopularTab extends React.Component{
     dataRepository.fetchRepository(URL)
                   .then((result)=>{
                     if(!result)return;
-                    let items = result&&result.items ? result.items : result ? result : [];
-                    this.refs.toast.show(`获取到 ${result.items.length} 条数据`);
-                    this.setState({
-                      dataSource: this.state.dataSource.cloneWithRows(items),
-                      isLoading: false,
-                      isLoadingFail: false,
-                    });
+                    this.items = result&&result.items ? result.items : result ? result : [];
+                    this.flushFavoriteState();
                     console.log(`----- 瞬瞬 ${result.date}`);
                     if(result&&result.date&&dataRepository.checkDate(result.date)){
                       console.log(`----- 重新获取网络数据 `);
@@ -115,21 +139,15 @@ class PopularTab extends React.Component{
                     }
                   })
                   .then((items)=>{
-                    // console.log(`----- ${items} --- ${Object.keys(items)}`);
-                    //|| items.length==0
-                    if(!items )return;
+                    if(!items || items.length==0)return;
                       this.refs.toast.show(`网络数据获取到 ${items.length} 条数据`);
-                      // Alert.alert(`获取到 ${items.length} 条数据`);
-                      this.setState({
-                        dataSource: this.state.dataSource.cloneWithRows(items),
-                        isLoading: false,
-                        isLoadingFail: false,
-                      })
+                      this.items = items;
+                      this.flushFavoriteState();
                   })
                   .catch(error=>{
                     console.log(`[报错] --- ${error}`);
                     this.refs.toast.show(error);
-                    this.setState({
+                    this.updateState({
                       isLoading: false,
                       isLoadingFail: true,
                     })

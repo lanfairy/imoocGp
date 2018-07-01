@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View,
   TouchableHighlight,
+  TouchableOpacity,
   Text,
   Image
 } from 'react-native';
@@ -13,48 +14,57 @@ export default class RepositoryCell extends Component{
   constructor(props){
     super(props);
     this.state = {
-      rowData: this.props.rowData,
-      favoriteIcon: require('../../res/images/ic_star.png')
+      item: this.props.projectModel.item ? this.props.projectModel.item : this.props.projectModel,
+      isFavorite: this.props.projectModel.isFavorite,
+      favoriteIcon: this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png'),
     }
   }
+  setFavoriteState = (isFavorite)=>{
+    this.setState({
+      isFavorite: isFavorite,
+      favoriteIcon: isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png'),
+    })
+  };
   onPressFavorite = ()=>{
-    
+    this.setFavoriteState(!this.state.isFavorite);
+    this.props.onFavorite(this.props.projectModel.item, this.state.isFavorite);
   };
 
   render(){
-    let rowData = this.state.rowData;
+    let item = this.state.item; 
     let favoriteButton=
-            <TouchableHighlight
+            <TouchableOpacity
                 style={{padding:6}}
                 onPress={this.onPressFavorite} 
                 underlayColor='transparent'>
                 <Image
                     ref='favoriteIcon'
-                    style={[{width: 22, height: 22,}]}
+                    style={[{width: 22, height: 22, },{tintColor: '#2196F3'}]}
                     source={this.state.favoriteIcon}/>
-            </TouchableHighlight>;
+            </TouchableOpacity>;
+      let TouchableElement = TouchableOpacity;
     return(
-      <TouchableHighlight
-        onPress={()=>this.props.onSelected(rowData)}
+      <TouchableElement
+        onPress={()=>this.props.onSelected(item)}
         onShowUnderlay={this.props.onHighlight}
         underlayColor='transparent'
         onHideUnderlay={this.props.onUnhighlight}
       >
         <View style={[GlobalStyles.cell_container]}>
-            <Text style={styles.title}>{rowData.full_name}</Text>
-            <Text style={styles.description}>{rowData.description}</Text>
+            <Text style={styles.title}>{item.full_name}</Text>
+            <Text style={styles.description}>{item.description}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.author}>Author: </Text>
-                  <Image source={{uri:rowData.owner.avatar_url}} style={GlobalStyles.cell_img_owner_avatar} />
+                  <Image source={{uri:item.owner.avatar_url}} style={GlobalStyles.cell_img_owner_avatar} />
                 </View>
                 <View>
-                  <Text>{`Starts:  ${rowData.stargazers_count}`}</Text>
+                  <Text>{`Starts:  ${item.stargazers_count}`}</Text>
                 </View>
                 {favoriteButton}
             </View>
         </View>
-      </TouchableHighlight>
+      </TouchableElement>
     );
   }
 }
