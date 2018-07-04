@@ -12,15 +12,16 @@ export default class RepositoryDetail extends Component {
   constructor(props){
     super(props);
     let projectModel = this.props.navigation.getParam('projectModel');
-    let item = projectModel.item;
     this.state={
-      url: item.html_url,
+      url: projectModel.item.html_url,
       canGoBack: false,
+      isFavorite: projectModel.isFavorite,
     }
   }
   componentWillMount(){
     this.props.navigation.setParams({
       onBack: this._onBack,
+      onFavoriteProject: this._onFavoriteProject,
     });
   }
   render() {
@@ -54,6 +55,19 @@ export default class RepositoryDetail extends Component {
       this.props.navigation.pop();
     }
   };
+  setFavoriteState = (isFavorite)=>{
+    this.setState({
+      isFavorite: isFavorite,
+    })
+    let favoriteIcon = (isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png'));
+    this.props.navigation.setParams({
+      favoriteIcon : favoriteIcon,
+    });
+  };
+  _onFavoriteProject = ()=>{
+    this.setFavoriteState(!this.state.isFavorite);
+    // this.props.onFavorite(this.props.projectModel.item, !this.state.isFavorite);
+  };
 }
 
 
@@ -63,9 +77,10 @@ RepositoryDetail.navigationOptions = props => {
   const { navigation } = props;
   const { state, setParams } = navigation;
   const { params } = state;
-  let item = navigation.getParam('projectModel').item;
-  let title = item.full_name;
-
+  let projectModel = navigation.getParam('projectModel');
+  let title = projectModel.item.full_name;
+  let favoriteIcon = (projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png'));
+  favoriteIcon = navigation.getParam('favoriteIcon', favoriteIcon);
   return {
     headerTitle: title,
     headerTintColor: '#FFF',
@@ -73,11 +88,14 @@ RepositoryDetail.navigationOptions = props => {
       navigation.getParam('onBack')
     )),
 
-    // headerRight: (
-    //   ViewUtils.getRightBtn(
-    //     navigation.getParam('onSave'),null,'保存'
-    //   )
-    // ),
+    headerRight: (
+      ViewUtils.getRightBtn(
+        navigation.getParam('onFavoriteProject'),
+        favoriteIcon,
+        null,
+        {marginRight: 0,}
+      )
+    ),
 
     headerStyle: {
       backgroundColor: ThemeFlags.Polular,

@@ -82720,12 +82720,28 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         }
       };
 
+      _this.setFavoriteState = function (isFavorite) {
+        _this.setState({
+          isFavorite: isFavorite
+        });
+
+        var favoriteIcon = isFavorite ? _require(_dependencyMap[5], '../../res/images/ic_star.png') : _require(_dependencyMap[6], '../../res/images/ic_unstar_transparent.png');
+
+        _this.props.navigation.setParams({
+          favoriteIcon: favoriteIcon
+        });
+      };
+
+      _this._onFavoriteProject = function () {
+        _this.setFavoriteState(!_this.state.isFavorite);
+      };
+
       var projectModel = _this.props.navigation.getParam('projectModel');
 
-      var item = projectModel.item;
       _this.state = {
-        url: item.html_url,
-        canGoBack: false
+        url: projectModel.item.html_url,
+        canGoBack: false,
+        isFavorite: projectModel.isFavorite
       };
       return _this;
     }
@@ -82734,7 +82750,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       key: "componentWillMount",
       value: function componentWillMount() {
         this.props.navigation.setParams({
-          onBack: this._onBack
+          onBack: this._onBack,
+          onFavoriteProject: this._onFavoriteProject
         });
       }
     }, {
@@ -82746,7 +82763,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             style: styles.flex,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 28
+              lineNumber: 29
             }
           },
           _react3.default.createElement(_reactNative.WebView, {
@@ -82764,7 +82781,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             onNavigationStateChange: this.onNavigationStateChange,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 29
+              lineNumber: 30
             }
           })
         );
@@ -82781,12 +82798,17 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     var state = navigation.state,
         setParams = navigation.setParams;
     var params = state.params;
-    var item = navigation.getParam('projectModel').item;
-    var title = item.full_name;
+    var projectModel = navigation.getParam('projectModel');
+    var title = projectModel.item.full_name;
+    var favoriteIcon = projectModel.isFavorite ? _require(_dependencyMap[5], '../../res/images/ic_star.png') : _require(_dependencyMap[6], '../../res/images/ic_unstar_transparent.png');
+    favoriteIcon = navigation.getParam('favoriteIcon', favoriteIcon);
     return {
       headerTitle: title,
       headerTintColor: '#FFF',
       headerLeft: _ViewUtils2.default.getLeftBtn(navigation.getParam('onBack')),
+      headerRight: _ViewUtils2.default.getRightBtn(navigation.getParam('onFavoriteProject'), favoriteIcon, null, {
+        marginRight: 0
+      }),
       headerStyle: {
         backgroundColor: _ThemeConfig.ThemeFlags.Polular
       }
@@ -82801,7 +82823,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       flex: 1
     }
   });
-},631,[118,130,12,632,619],"js/polular/RepositoryDetail.js");
+},631,[118,130,12,632,619,622,623],"js/polular/RepositoryDetail.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -82935,7 +82957,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       }
     }, {
       key: "getRightBtn",
-      value: function getRightBtn(callBack, icon, text) {
+      value: function getRightBtn(callBack, icon, text, style) {
         return _react2.default.createElement(
           _reactNative.TouchableOpacity,
           {
@@ -82951,18 +82973,18 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           icon ? _react2.default.createElement(_reactNative.Image, {
             source: icon,
             resizeMode: "stretch",
-            style: {
+            style: [{
               opacity: 1,
               width: 16,
               height: 16,
               marginRight: 10
-            },
+            }, style],
             __source: {
               fileName: _jsxFileName,
               lineNumber: 50
             }
           }) : null,
-          _react2.default.createElement(
+          !text ? _react2.default.createElement(
             _reactNative.Text,
             {
               style: {
@@ -82971,11 +82993,11 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               },
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 53
+                lineNumber: 54
               }
             },
             text
-          )
+          ) : null
         );
       }
     }]);

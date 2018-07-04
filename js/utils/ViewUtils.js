@@ -40,17 +40,19 @@ export default class ViewUtils {
     );
   }
 
-  static getRightBtn(callBack,icon,text){
+  static getRightBtn(callBack,icon,text,style){
     return (
       <TouchableOpacity
         onPress={callBack}
         style={{padding:8}}
       >
         {
-          icon ? <Image source={icon} resizeMode='stretch' style={{opacity: 1, width: 16, height: 16, marginRight: 10}}/>
+          icon ? <Image source={icon} resizeMode='stretch' style={[{opacity: 1, width: 16, height: 16, marginRight: 10},style]}/>
            : null
         }
-        <Text style={{color: '#FFF', fontSize: 18}}>{text}</Text>
+        {
+          !text ? <Text style={{color: '#FFF', fontSize: 18}}>{text}</Text> : null
+        } 
       </TouchableOpacity>
     );
   }
