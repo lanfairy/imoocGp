@@ -63,7 +63,9 @@ RepositoryDetail.navigationOptions = props => {
   const { navigation } = props;
   const { state, setParams } = navigation;
   const { params } = state;
-  let title = navigation.getParam('projectModel').item.full_name;
+  let item = navigation.getParam('projectModel').item;
+  let title = item.full_name;
+
   return {
     headerTitle: title,
     headerTintColor: '#FFF',

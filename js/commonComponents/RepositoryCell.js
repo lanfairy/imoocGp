@@ -45,7 +45,7 @@ export default class RepositoryCell extends Component{
       let TouchableElement = TouchableOpacity;
     return(
       <TouchableElement
-        onPress={()=>this.props.onSelected(item)}
+        onPress={()=>this.props.onSelected(this.props.projectModel)}
         onShowUnderlay={this.props.onHighlight}
         underlayColor='transparent'
         onHideUnderlay={this.props.onUnhighlight}

@@ -82057,7 +82057,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           TouchableElement,
           {
             onPress: function onPress() {
-              return _this2.props.onSelected(item);
+              return _this2.props.onSelected(_this2.props.projectModel);
             },
             onShowUnderlay: this.props.onHighlight,
             underlayColor: "transparent",
@@ -82781,7 +82781,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     var state = navigation.state,
         setParams = navigation.setParams;
     var params = state.params;
-    var title = navigation.getParam('projectModel').item.full_name;
+    var item = navigation.getParam('projectModel').item;
+    var title = item.full_name;
     return {
       headerTitle: title,
       headerTintColor: '#FFF',
