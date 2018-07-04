@@ -23,8 +23,12 @@ import GlobalStyles from '../../res/style/GlobalStyles';
 import RepositoryCell from '../commonComponents/RepositoryCell';
 import DataRepository, {FLAG_STORAGE} from '../expand/dao/DataRepository';
 import ProjectModel from '../mode/ProjectModel';
+import FavoriteDao from '../expand/dao/FavoriteDao';
+import Utils from '../utils/Utils';
 
 var dataRepository = new DataRepository(FLAG_STORAGE.flag_popular);
+let favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular);
+
 class PopularTab extends React.Component{
   constructor(props){
     super(props);
@@ -34,6 +38,7 @@ class PopularTab extends React.Component{
       isLoading: false,
       isLoadingFail: false,
       dataSource: ds.cloneWithRows([]),
+      favoriteKeys: [],
     }
   }
 
@@ -85,7 +90,15 @@ class PopularTab extends React.Component{
     navigation.navigate('RepositoryDetail',{projectModel: projectModel});
   };
   onFavorite = (item, isFavorite)=>{
-
+    if(isFavorite){
+      favoriteDao.saveFavoriteItem(item.id.toString(),JSON.stringify(item),(tipText)=>{
+        this.refs.toast.show(tipText);
+      });
+    }else{
+      favoriteDao.removeFavoriteItem(item.id.toString(),(tipText)=>{
+        this.refs.toast.show(tipText);
+      });
+    }
   };
   _renderRow = (projectModel)=>{
     return(
@@ -99,6 +112,17 @@ class PopularTab extends React.Component{
   _onRefresh = ()=>{
     this._loadData(true);
   };
+  //获取本地用户收藏的ProjectItem
+  getFavoriteKeys(){
+    favoriteDao.getFavoriteKeys().then((keys)=>{
+      if(keys)
+        this.updateState({favoriteKeys: keys});
+      this.flushFavoriteState();
+    }).catch((error)=>{
+      this.flushFavoriteState();
+      console.log(`[报错] ${error}`);
+    });
+  }
   /**
    * 更新 project item 的收藏状态
    */
@@ -106,7 +130,7 @@ class PopularTab extends React.Component{
     let projectModels = [];
     let items = this.items;
     items.forEach((val, i , arr)=>{
-      projectModels.push(new ProjectModel(val, false));
+      projectModels.push(new ProjectModel(val, Utils.checkFavorite(val, this.state.favoriteKeys)));
     });
     this.updateState({
       isLoading: false,
@@ -131,7 +155,7 @@ class PopularTab extends React.Component{
                   .then((result)=>{
                     if(!result)return;
                     this.items = result&&result.items ? result.items : result ? result : [];
-                    this.flushFavoriteState();
+                    this.getFavoriteKeys();
                     console.log(`----- 瞬瞬 ${result.date}`);
                     if(result&&result.date&&dataRepository.checkDate(result.date)){
                       console.log(`----- 重新获取网络数据 `);
@@ -142,7 +166,7 @@ class PopularTab extends React.Component{
                     if(!items || items.length==0)return;
                       this.refs.toast.show(`网络数据获取到 ${items.length} 条数据`);
                       this.items = items;
-                      this.flushFavoriteState();
+                      this.getFavoriteKeys();
                   })
                   .catch(error=>{
                     console.log(`[报错] --- ${error}`);

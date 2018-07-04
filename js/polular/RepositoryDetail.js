@@ -11,9 +11,10 @@ const WEBVIEW_REF = 'webview';
 export default class RepositoryDetail extends Component {
   constructor(props){
     super(props);
-    let rowData = this.props.navigation.getParam('rowData');
+    let projectModel = this.props.navigation.getParam('projectModel');
+    let item = projectModel.item;
     this.state={
-      url: rowData.html_url,
+      url: item.html_url,
       canGoBack: false,
     }
   }
@@ -23,7 +24,6 @@ export default class RepositoryDetail extends Component {
     });
   }
   render() {
-      // {this.props.navigation.getParam('rowData').html_url}
     return (
       <View style={styles.flex}>
         <WebView 
@@ -63,7 +63,7 @@ RepositoryDetail.navigationOptions = props => {
   const { navigation } = props;
   const { state, setParams } = navigation;
   const { params } = state;
-  let title = navigation.getParam('rowData').full_name;
+  let title = navigation.getParam('projectModel').item.full_name;
   return {
     headerTitle: title,
     headerTintColor: '#FFF',

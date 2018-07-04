@@ -23,13 +23,19 @@ saveFavoriteItem(key, value, callback){
         if(!error){
             this.updateFavoriteKeys(key, true);
         }
+        if(callback){
+            callback(!error ? '收藏项目成功' : '收藏项目失败');
+        }    
     })
   }
 
-  removeFavoriteItem(key){
-      AsyncStorage.setItem(key,(error)=>{
+  removeFavoriteItem(key,callback){
+      AsyncStorage.removeItem(key,(error)=>{
           if(!error){
               this.updateFavoriteKeys(key, false);
+          }
+          if(callback){
+              callback(!error ? '取消收藏成功' : '取消收藏失败');
           }
       })
   }
@@ -58,6 +64,7 @@ saveFavoriteItem(key, value, callback){
  */
 updateFavoriteKeys(key,isAdd){
     AsyncStorage.getItem(this.favoriteKey, (error, result)=>{
+        console.log(`[favorityKey]  ${this.favoriteKey}`);
         if(!error){
             let favoriteKeys = [];
             if(result){
