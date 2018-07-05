@@ -61587,7 +61587,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     tabBarOptions: {}
   });
   exports.default = MainTabs;
-},494,[12,495,603,636,681,684],"js/App.js");
+},494,[12,495,603,638,683,686],"js/App.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = {
     get createNavigationContainer() {
@@ -79336,7 +79336,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = MyPolularStack;
-},603,[118,12,495,604,619,631,635],"js/polular/MyPolularStack.js");
+},603,[118,12,495,604,619,633,637],"js/polular/MyPolularStack.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -79445,13 +79445,6 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
       var _this = _possibleConstructorReturn(this, (PopularTab.__proto__ || Object.getPrototypeOf(PopularTab)).call(this, props));
 
-      _this.onSelectRepository = function (projectModel) {
-        var navigation = _this.props.navigation;
-        navigation.navigate('RepositoryDetail', {
-          projectModel: projectModel
-        });
-      };
-
       _this.onFavorite = function (item, isFavorite) {
         if (isFavorite) {
           favoriteDao.saveFavoriteItem(item.id.toString(), JSON.stringify(item), function (tipText) {
@@ -79465,15 +79458,15 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       };
 
       _this._renderRow = function (projectModel) {
-        return _react3.default.createElement(_RepositoryCell2.default, {
+        return _react3.default.createElement(_RepositoryCell2.default, _extends({
           projectModel: projectModel,
-          onSelected: _this.onSelectRepository,
-          onFavorite: _this.onFavorite,
+          onFavorite: _this.onFavorite
+        }, _this.props, {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 105
+            lineNumber: 119
           }
-        });
+        }));
       };
 
       _this._onRefresh = function () {
@@ -79719,13 +79712,13 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 underlineHeight: 2,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 217
+                  lineNumber: 232
                 }
               });
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 209
+              lineNumber: 224
             }
           },
           this.state.languages.map(function (result, i, arr) {
@@ -79736,7 +79729,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             }, _this5.props, {
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 223
+                lineNumber: 238
               }
             })) : null;
           })
@@ -79747,7 +79740,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             navigation: navigation,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 229
+              lineNumber: 244
             }
           },
           _react3.default.createElement(
@@ -79758,7 +79751,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               }],
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 230
+                lineNumber: 245
               }
             },
             content
@@ -79803,7 +79796,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       backgroundColor: '#FFF'
     }
   });
-},604,[118,130,12,605,611,612,615,618,619,620,621,624,630,700,701],"js/polular/MyPolularScreen.js");
+},604,[118,130,12,605,611,612,615,618,619,620,621,624,630,631,632],"js/polular/MyPolularScreen.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -82003,9 +81996,23 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       };
 
       _this.onPressFavorite = function () {
-        _this.setFavoriteState(!_this.state.isFavorite);
+        _this.favoriteAction(_this.props.projectModel.item, !_this.state.isFavorite);
+      };
 
-        _this.props.onFavorite(_this.props.projectModel.item, !_this.state.isFavorite);
+      _this.favoriteAction = function (item, isFavorite) {
+        _this.setFavoriteState(isFavorite);
+
+        _this.props.onFavorite(item, isFavorite);
+      };
+
+      _this.onSelectRepository = function (projectModel) {
+        var navigation = _this.props.navigation;
+        navigation.navigate('RepositoryDetail', {
+          projectModel: projectModel,
+          onFavorite: function onFavorite(item, isFavorite) {
+            _this.favoriteAction(item, isFavorite);
+          }
+        });
       };
 
       _this.state = {
@@ -82033,7 +82040,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             underlayColor: "transparent",
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 36
+              lineNumber: 52
             }
           },
           _react3.default.createElement(_reactNative.Image, {
@@ -82047,7 +82054,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             source: this.state.favoriteIcon,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 40
+              lineNumber: 56
             }
           })
         );
@@ -82057,14 +82064,14 @@ __d(function (global, _require, module, exports, _dependencyMap) {
           TouchableElement,
           {
             onPress: function onPress() {
-              return _this2.props.onSelected(_this2.props.projectModel);
+              return _this2.onSelectRepository(_this2.props.projectModel);
             },
             onShowUnderlay: this.props.onHighlight,
             underlayColor: "transparent",
             onHideUnderlay: this.props.onUnhighlight,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 47
+              lineNumber: 63
             }
           },
           _react3.default.createElement(
@@ -82073,7 +82080,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
               style: [_GlobalStyles2.default.cell_container],
               __source: {
                 fileName: _jsxFileName,
-                lineNumber: 53
+                lineNumber: 69
               }
             },
             _react3.default.createElement(
@@ -82082,7 +82089,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 style: styles.title,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 54
+                  lineNumber: 70
                 }
               },
               item.full_name
@@ -82093,7 +82100,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 style: styles.description,
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 55
+                  lineNumber: 71
                 }
               },
               item.description
@@ -82108,7 +82115,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 },
                 __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 56
+                  lineNumber: 72
                 }
               },
               _react3.default.createElement(
@@ -82120,7 +82127,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                   },
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 57
+                    lineNumber: 73
                   }
                 },
                 _react3.default.createElement(
@@ -82129,7 +82136,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                     style: styles.author,
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 58
+                      lineNumber: 74
                     }
                   },
                   "Author: "
@@ -82141,7 +82148,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                   style: _GlobalStyles2.default.cell_img_owner_avatar,
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 59
+                    lineNumber: 75
                   }
                 })
               ),
@@ -82150,7 +82157,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                 {
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 61
+                    lineNumber: 77
                   }
                 },
                 _react3.default.createElement(
@@ -82158,7 +82165,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
                   {
                     __source: {
                       fileName: _jsxFileName,
-                      lineNumber: 62
+                      lineNumber: 78
                     }
                   },
                   "Starts:  " + item.stargazers_count
@@ -82644,6 +82651,142 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     }
 },630,[],"js/mode/ProjectModel.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    var _reactNative = _require(_dependencyMap[0], "react-native");
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var FAVORITE_KEY_REFIX = 'favorite_';
+
+    var FavoriteDao = function () {
+        function FavoriteDao(flag) {
+            _classCallCheck(this, FavoriteDao);
+
+            this.flag = flag;
+            this.favoriteKey = "" + FAVORITE_KEY_REFIX + flag;
+        }
+
+        _createClass(FavoriteDao, [{
+            key: "saveFavoriteItem",
+            value: function saveFavoriteItem(key, value, callback) {
+                var _this = this;
+
+                _reactNative.AsyncStorage.setItem(key, value, function (error) {
+                    if (!error) {
+                        _this.updateFavoriteKeys(key, true);
+                    }
+
+                    if (callback) {
+                        callback(!error ? '收藏项目成功' : '收藏项目失败');
+                    }
+                });
+            }
+        }, {
+            key: "removeFavoriteItem",
+            value: function removeFavoriteItem(key, callback) {
+                var _this2 = this;
+
+                _reactNative.AsyncStorage.removeItem(key, function (error) {
+                    if (!error) {
+                        _this2.updateFavoriteKeys(key, false);
+                    }
+
+                    if (callback) {
+                        callback(!error ? '取消收藏成功' : '取消收藏失败');
+                    }
+                });
+            }
+        }, {
+            key: "getFavoriteKeys",
+            value: function getFavoriteKeys() {
+                var _this3 = this;
+
+                return new Promise(function (resolve, reject) {
+                    _reactNative.AsyncStorage.getItem(_this3.favoriteKey, function (error, result) {
+                        if (!error) {
+                            try {
+                                resolve(JSON.parse(result));
+                            } catch (e) {
+                                reject(e);
+                            }
+                        } else {
+                            reject(error);
+                        }
+                    });
+                });
+            }
+        }, {
+            key: "updateFavoriteKeys",
+            value: function updateFavoriteKeys(key, isAdd) {
+                var _this4 = this;
+
+                _reactNative.AsyncStorage.getItem(this.favoriteKey, function (error, result) {
+                    console.log("[favorityKey]  " + _this4.favoriteKey);
+
+                    if (!error) {
+                        var favoriteKeys = [];
+
+                        if (result) {
+                            favoriteKeys = JSON.parse(result);
+                        }
+
+                        var index = favoriteKeys.indexOf(key);
+
+                        if (isAdd) {
+                            if (index === -1) favoriteKeys.push(key);
+                        } else {
+                            if (index !== -1) favoriteKeys.splice(index, 1);
+                        }
+
+                        _reactNative.AsyncStorage.setItem(_this4.favoriteKey, JSON.stringify(favoriteKeys));
+                    }
+                });
+            }
+        }]);
+
+        return FavoriteDao;
+    }();
+
+    exports.default = FavoriteDao;
+},631,[12],"js/expand/dao/FavoriteDao.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+
+    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+    var Utils = function () {
+        function Utils() {
+            _classCallCheck(this, Utils);
+        }
+
+        _createClass(Utils, null, [{
+            key: "checkFavorite",
+            value: function checkFavorite(item, items) {
+                return items.some(function (key) {
+                    return item.id.toString() === key;
+                });
+            }
+        }]);
+
+        return Utils;
+    }();
+
+    exports.default = Utils;
+},632,[],"js/utils/Utils.js");
+__d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
@@ -82734,6 +82877,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
       _this._onFavoriteProject = function () {
         _this.setFavoriteState(!_this.state.isFavorite);
+
+        if (_this.props.navigation.getParam("onFavorite", null)) _this.props.navigation.getParam("onFavorite")(_this.state.item, !_this.state.isFavorite);
       };
 
       var projectModel = _this.props.navigation.getParam('projectModel');
@@ -82741,7 +82886,8 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       _this.state = {
         url: projectModel.item.html_url,
         canGoBack: false,
-        isFavorite: projectModel.isFavorite
+        isFavorite: projectModel.isFavorite,
+        item: projectModel.item
       };
       return _this;
     }
@@ -82763,7 +82909,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             style: styles.flex,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 29
+              lineNumber: 33
             }
           },
           _react3.default.createElement(_reactNative.WebView, {
@@ -82781,7 +82927,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             onNavigationStateChange: this.onNavigationStateChange,
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 30
+              lineNumber: 34
             }
           })
         );
@@ -82823,7 +82969,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       flex: 1
     }
   });
-},631,[118,130,12,632,619,622,623],"js/polular/RepositoryDetail.js");
+},633,[118,130,12,634,619,622,623],"js/polular/RepositoryDetail.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -83028,7 +83174,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       alignSelf: 'center'
     }
   });
-},632,[118,12,633,634],"js/utils/ViewUtils.js");
+},634,[118,12,635,636],"js/utils/ViewUtils.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -83040,7 +83186,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_tiaozhuan",
     "type": "png"
   });
-},633,[326],"res/images/ic_tiaozhuan.png");
+},635,[326],"res/images/ic_tiaozhuan.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -83052,7 +83198,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_arrow_back_white_36pt",
     "type": "png"
   });
-},634,[326],"res/images/ic_arrow_back_white_36pt.png");
+},636,[326],"res/images/ic_arrow_back_white_36pt.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -83064,7 +83210,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_polular",
     "type": "png"
   });
-},635,[326],"res/images/ic_polular.png");
+},637,[326],"res/images/ic_polular.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -83392,7 +83538,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = MyTrendingStack;
-},636,[118,130,12,637,642,619,677,678,679,680],"js/trending/MyTrendingStack.js");
+},638,[118,130,12,639,644,619,679,680,681,682],"js/trending/MyTrendingStack.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -83453,7 +83599,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},637,[638,640,641,639],"node_modules/react-native-popover-view/src/index.js");
+},639,[640,642,643,641],"node_modules/react-native-popover-view/src/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -84468,7 +84614,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     arrowStyle: _propTypes2.default.object
   };
   exports.default = Popover;
-},638,[118,130,294,12,639,109],"node_modules/react-native-popover-view/src/Popover.js");
+},640,[118,130,294,12,641,109],"node_modules/react-native-popover-view/src/Popover.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -84574,7 +84720,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     if (!isPoint(a) || !isPoint(b)) return false;
     return Math.round(a.x) !== Math.round(b.x) || Math.round(a.y) !== Math.round(b.y);
   }
-},639,[12],"node_modules/react-native-popover-view/src/Utility.js");
+},641,[12],"node_modules/react-native-popover-view/src/Utility.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -84789,7 +84935,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     popoverStyle: _propTypes2.default.object,
     arrowStyle: _propTypes2.default.object
   };
-},640,[118,130,638,639,12,294],"node_modules/react-native-popover-view/src/PopoverNavigation.js");
+},642,[118,130,640,641,12,294],"node_modules/react-native-popover-view/src/PopoverNavigation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -85067,7 +85213,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   };
 
   exports.default = createPopoverStackNavigator;
-},641,[118,130,12,639,640,496,539,507,504,508,509,536,499,527,533],"node_modules/react-native-popover-view/src/PopoverStackNavigator.js");
+},643,[118,130,12,641,642,496,539,507,504,508,509,536,499,527,533],"node_modules/react-native-popover-view/src/PopoverStackNavigator.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -85469,7 +85615,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       fontSize: 40
     }
   });
-},642,[118,130,12,605,611,612,615,618,619,620,643,624],"js/trending/MyTrendingScreen.js");
+},644,[118,130,12,605,611,612,615,618,619,620,645,624],"js/trending/MyTrendingScreen.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -85734,7 +85880,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             color: '#757575'
         }
     });
-},643,[118,130,12,644,620,622],"js/trending/TrendingRepoCell.js");
+},645,[118,130,12,646,620,622],"js/trending/TrendingRepoCell.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -85747,7 +85893,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
   exports.default = _HTMLView2.default;
-},644,[645],"node_modules/react-native-htmlview/index.js");
+},646,[647],"node_modules/react-native-htmlview/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -85996,7 +86142,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     RootComponent: _reactNative.View
   };
   exports.default = HtmlView;
-},645,[118,130,294,646,12],"node_modules/react-native-htmlview/HTMLView.js");
+},647,[118,130,294,648,12],"node_modules/react-native-htmlview/HTMLView.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -86222,7 +86368,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     parser.write(rawHtml);
     parser.done();
   }
-},646,[118,12,647,667,676],"node_modules/react-native-htmlview/htmlToElement.js");
+},648,[118,12,649,669,678],"node_modules/react-native-htmlview/htmlToElement.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var Parser = _require(_dependencyMap[0], "./Parser.js"),
 	    DomHandler = _require(_dependencyMap[1], "domhandler");
@@ -86290,7 +86436,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			end: 0
 		}
 	};
-},647,[648,657,649,658,661,662,663,675],"node_modules/htmlparser2-without-node-native/lib/index.js");
+},649,[650,659,651,660,663,664,665,677],"node_modules/htmlparser2-without-node-native/lib/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var Tokenizer;
 	var formTags = {
@@ -86637,7 +86783,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 	Parser.prototype.parseChunk = Parser.prototype.write;
 	Parser.prototype.done = Parser.prototype.end;
 	module.exports = Parser;
-},648,[649,655,656],"node_modules/htmlparser2-without-node-native/lib/Parser.js");
+},650,[651,657,658],"node_modules/htmlparser2-without-node-native/lib/Parser.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	module.exports = Tokenizer;
 
@@ -87484,7 +87630,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			this._cbs.ontext(value);
 		}
 	};
-},649,[650,652,653,654],"node_modules/htmlparser2-without-node-native/lib/Tokenizer.js");
+},651,[652,654,655,656],"node_modules/htmlparser2-without-node-native/lib/Tokenizer.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var decodeMap = _require(_dependencyMap[0], "../maps/decode.json");
 
@@ -87510,7 +87656,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 		output += String.fromCharCode(codePoint);
 		return output;
 	}
-},650,[651],"node_modules/entities/lib/decode_codepoint.js");
+},652,[653],"node_modules/entities/lib/decode_codepoint.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = {
     "0": 65533,
@@ -87542,7 +87688,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "158": 382,
     "159": 376
   };
-},651,[],"node_modules/entities/maps/decode.json");
+},653,[],"node_modules/entities/maps/decode.json");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = {
     "Aacute": "\xC1",
@@ -89671,7 +89817,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "zwj": "\u200D",
     "zwnj": "\u200C"
   };
-},652,[],"node_modules/entities/maps/entities.json");
+},654,[],"node_modules/entities/maps/entities.json");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = {
     "Aacute": "\xC1",
@@ -89781,7 +89927,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "yen": "\xA5",
     "yuml": "\xFF"
   };
-},653,[],"node_modules/entities/maps/legacy.json");
+},655,[],"node_modules/entities/maps/legacy.json");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = {
     "amp": "&",
@@ -89790,7 +89936,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "lt": "<",
     "quot": "\""
   };
-},654,[],"node_modules/entities/maps/xml.json");
+},656,[],"node_modules/entities/maps/xml.json");
 __d(function (global, _require, module, exports, _dependencyMap) {
   if (typeof Object.create === 'function') {
     module.exports = function inherits(ctor, superCtor) {
@@ -89815,7 +89961,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       ctor.prototype.constructor = ctor;
     };
   }
-},655,[],"node_modules/inherits/inherits_browser.js");
+},657,[],"node_modules/inherits/inherits_browser.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   ;
   !function (undefined) {
@@ -90540,7 +90686,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       window.EventEmitter2 = EventEmitter;
     }
   }();
-},656,[],"node_modules/eventemitter2/lib/eventemitter2.js");
+},658,[],"node_modules/eventemitter2/lib/eventemitter2.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var ElementType = _require(_dependencyMap[0], "domelementtype");
 
@@ -90751,7 +90897,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 	};
 
 	module.exports = DomHandler;
-},657,[658,659,660],"node_modules/domhandler/index.js");
+},659,[660,661,662],"node_modules/domhandler/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	module.exports = {
 		Text: "text",
@@ -90766,7 +90912,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			return elem.type === "tag" || elem.type === "script" || elem.type === "style";
 		}
 	};
-},658,[],"node_modules/domelementtype/index.js");
+},660,[],"node_modules/domelementtype/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var NodePrototype = module.exports = {
 		get firstChild() {
@@ -90810,7 +90956,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			}
 		});
 	});
-},659,[],"node_modules/domhandler/lib/node.js");
+},661,[],"node_modules/domhandler/lib/node.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var NodePrototype = _require(_dependencyMap[0], './node');
 
@@ -90830,7 +90976,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			}
 		});
 	});
-},660,[659],"node_modules/domhandler/lib/element.js");
+},662,[661],"node_modules/domhandler/lib/element.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var index = _require(_dependencyMap[0], "./index.js"),
 	    DomHandler = index.DomHandler,
@@ -90921,7 +91067,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 	};
 
 	module.exports = FeedHandler;
-},661,[647,655],"node_modules/htmlparser2-without-node-native/lib/FeedHandler.js");
+},663,[649,657],"node_modules/htmlparser2-without-node-native/lib/FeedHandler.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	module.exports = ProxyHandler;
 
@@ -90954,7 +91100,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			throw Error("wrong number of arguments");
 		}
 	});
-},662,[647],"node_modules/htmlparser2-without-node-native/lib/ProxyHandler.js");
+},664,[649],"node_modules/htmlparser2-without-node-native/lib/ProxyHandler.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var DomUtils = module.exports;
 	[_require(_dependencyMap[0], "./lib/stringify"), _require(_dependencyMap[1], "./lib/traversal"), _require(_dependencyMap[2], "./lib/manipulation"), _require(_dependencyMap[3], "./lib/querying"), _require(_dependencyMap[4], "./lib/legacy"), _require(_dependencyMap[5], "./lib/helpers")].forEach(function (ext) {
@@ -90962,7 +91108,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			DomUtils[key] = ext[key].bind(DomUtils);
 		});
 	});
-},663,[664,670,671,672,673,674],"node_modules/domutils/index.js");
+},665,[666,672,673,674,675,676],"node_modules/domutils/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var ElementType = _require(_dependencyMap[0], "domelementtype"),
 	    getOuterHTML = _require(_dependencyMap[1], "dom-serializer"),
@@ -90987,7 +91133,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 		if (elem.type === ElementType.Text) return elem.data;
 		return "";
 	}
-},664,[658,665],"node_modules/domutils/lib/stringify.js");
+},666,[660,667],"node_modules/domutils/lib/stringify.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   var ElementType = _require(_dependencyMap[0], 'domelementtype');
 
@@ -91138,7 +91284,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   function renderComment(elem) {
     return '<!--' + elem.data + '-->';
   }
-},665,[666,667],"node_modules/dom-serializer/index.js");
+},667,[668,669],"node_modules/dom-serializer/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	module.exports = {
 		Text: "text",
@@ -91152,7 +91298,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			return elem.type === "tag" || elem.type === "script" || elem.type === "style";
 		}
 	};
-},666,[],"node_modules/dom-serializer/node_modules/domelementtype/index.js");
+},668,[],"node_modules/dom-serializer/node_modules/domelementtype/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var encode = _require(_dependencyMap[0], "./lib/encode.js"),
 	    decode = _require(_dependencyMap[1], "./lib/decode.js");
@@ -91175,7 +91321,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 	exports.decodeHTML4 = exports.decodeHTML5 = exports.decodeHTML = decode.HTML;
 	exports.decodeHTML4Strict = exports.decodeHTML5Strict = exports.decodeHTMLStrict = decode.HTMLStrict;
 	exports.escape = encode.escape;
-},667,[668,669],"node_modules/entities/index.js");
+},669,[670,671],"node_modules/entities/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var inverseXML = getInverseObj(_require(_dependencyMap[0], "../maps/xml.json")),
 	    xmlReplacer = getInverseReplacer(inverseXML);
@@ -91236,7 +91382,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 	}
 
 	exports.escape = escapeXML;
-},668,[654,652],"node_modules/entities/lib/encode.js");
+},670,[656,654],"node_modules/entities/lib/encode.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var entityMap = _require(_dependencyMap[0], "../maps/entities.json"),
 	    legacyMap = _require(_dependencyMap[1], "../maps/legacy.json"),
@@ -91305,7 +91451,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 		HTML: decodeHTML,
 		HTMLStrict: decodeHTMLStrict
 	};
-},669,[652,653,654,650],"node_modules/entities/lib/decode.js");
+},671,[654,655,656,652],"node_modules/entities/lib/decode.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var getChildren = exports.getChildren = function (elem) {
 		return elem.children;
@@ -91331,7 +91477,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 	exports.getName = function (elem) {
 		return elem.name;
 	};
-},670,[],"node_modules/domutils/lib/traversal.js");
+},672,[],"node_modules/domutils/lib/traversal.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	exports.removeElement = function (elem) {
 		if (elem.prev) elem.prev.next = elem.next;
@@ -91412,7 +91558,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 		prev.next = elem;
 		elem.prev = prev;
 	};
-},671,[],"node_modules/domutils/lib/manipulation.js");
+},673,[],"node_modules/domutils/lib/manipulation.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var isTag = _require(_dependencyMap[0], "domelementtype").isTag;
 
@@ -91509,7 +91655,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 
 		return result;
 	}
-},672,[658],"node_modules/domutils/lib/querying.js");
+},674,[660],"node_modules/domutils/lib/querying.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	var ElementType = _require(_dependencyMap[0], "domelementtype");
 
@@ -91611,7 +91757,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 	exports.getElementsByTagType = function (type, element, recurse, limit) {
 		return this.filter(Checks.tag_type(type), element, recurse, limit);
 	};
-},673,[658],"node_modules/domutils/lib/legacy.js");
+},675,[660],"node_modules/domutils/lib/legacy.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	exports.removeSubsets = function (nodes) {
 		var idx = nodes.length,
@@ -91731,7 +91877,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 		});
 		return nodes;
 	};
-},674,[],"node_modules/domutils/lib/helpers.js");
+},676,[],"node_modules/domutils/lib/helpers.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
 	module.exports = CollectingHandler;
 
@@ -91791,7 +91937,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
 			}
 		}
 	};
-},675,[647],"node_modules/htmlparser2-without-node-native/lib/CollectingHandler.js");
+},677,[649],"node_modules/htmlparser2-without-node-native/lib/CollectingHandler.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -91914,7 +92060,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }(_react2.PureComponent));
 
   exports.default = AutoSizedImage;
-},676,[118,130,12],"node_modules/react-native-htmlview/AutoSizedImage.js");
+},678,[118,130,12],"node_modules/react-native-htmlview/AutoSizedImage.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -92060,7 +92206,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             backgroundColor: '#ffffff'
         }
     });
-},677,[118,130,12,632],"js/trending/WebViewPage.js");
+},679,[118,130,12,634],"js/trending/WebViewPage.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -92071,7 +92217,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
         this.showText = showText;
         this.searchText = searchText;
     }
-},678,[],"js/mode/TimeSpan.js");
+},680,[],"js/mode/TimeSpan.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -92083,7 +92229,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_spinner_triangle",
     "type": "png"
   });
-},679,[326],"res/images/ic_spinner_triangle.png");
+},681,[326],"res/images/ic_spinner_triangle.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -92095,7 +92241,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_trending",
     "type": "png"
   });
-},680,[326],"res/images/ic_trending.png");
+},682,[326],"res/images/ic_trending.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -92169,7 +92315,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = MyFavoriteStack;
-},681,[118,12,495,682,619,683],"js/favorite/MyFavoriteStack.js");
+},683,[118,12,495,684,619,685],"js/favorite/MyFavoriteStack.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -92299,7 +92445,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = MyFavoriteScreen;
-},682,[118,130,12,615,619],"js/favorite/MyFavoriteScreen.js");
+},684,[118,130,12,615,619],"js/favorite/MyFavoriteScreen.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -92311,7 +92457,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_favorite",
     "type": "png"
   });
-},683,[326],"res/images/ic_favorite.png");
+},685,[326],"res/images/ic_favorite.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -92413,7 +92559,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = MyMineStack;
-},684,[118,12,495,685,686,694,619,697,698],"js/mine/MyMineStack.js");
+},686,[118,12,495,687,688,696,619,699,700],"js/mine/MyMineStack.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -92656,7 +92802,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   });
 
   exports.default = MyMineScreen;
-},685,[118,130,12,615,619,620,612],"js/mine/MyMineScreen.js");
+},687,[118,130,12,615,619,620,612],"js/mine/MyMineScreen.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -93006,7 +93152,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       backgroundColor: 'darkgray'
     }
   });
-},686,[118,130,12,495,687,632,619,612,691,692,693],"js/mine/CustomKeyPage.js");
+},688,[118,130,12,495,689,634,619,612,693,694,695],"js/mine/CustomKeyPage.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
     Object.defineProperty(exports, "__esModule", {
         value: true
@@ -93236,7 +93382,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
             marginLeft: 10
         }
     });
-},687,[118,130,12,294,688,689,690],"node_modules/react-native-check-box/index.js");
+},689,[118,130,12,294,690,691,692],"node_modules/react-native-check-box/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -93248,7 +93394,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_indeterminate_check_box",
     "type": "png"
   });
-},688,[326],"node_modules/react-native-check-box/img/ic_indeterminate_check_box.png");
+},690,[326],"node_modules/react-native-check-box/img/ic_indeterminate_check_box.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -93260,7 +93406,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_check_box",
     "type": "png"
   });
-},689,[326],"node_modules/react-native-check-box/img/ic_check_box.png");
+},691,[326],"node_modules/react-native-check-box/img/ic_check_box.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -93272,7 +93418,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_check_box_outline_blank",
     "type": "png"
   });
-},690,[326],"node_modules/react-native-check-box/img/ic_check_box_outline_blank.png");
+},692,[326],"node_modules/react-native-check-box/img/ic_check_box_outline_blank.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   'use strict';
 
@@ -93342,7 +93488,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }();
 
   exports.default = ArrayUtils;
-},691,[],"js/utils/ArrayUtils.js");
+},693,[],"js/utils/ArrayUtils.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -93354,7 +93500,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_check_box",
     "type": "png"
   });
-},692,[326],"res/images/my/ic_check_box.png");
+},694,[326],"res/images/my/ic_check_box.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -93366,7 +93512,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_check_box_outline_blank",
     "type": "png"
   });
-},693,[326],"res/images/my/ic_check_box_outline_blank.png");
+},695,[326],"res/images/my/ic_check_box_outline_blank.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -93689,7 +93835,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       color: '#333'
     }
   });
-},694,[118,130,12,695,612,691,632,619,696],"js/mine/SortKeyPage.js");
+},696,[118,130,12,697,612,693,634,619,698],"js/mine/SortKeyPage.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   var _react2 = _require(_dependencyMap[0], "react");
 
@@ -94326,7 +94472,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
   }, _temp));
 
   module.exports = SortableListView;
-},695,[118,130,12],"node_modules/react-native-sortable-listview/index.js");
+},697,[118,130,12],"node_modules/react-native-sortable-listview/index.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -94338,7 +94484,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_sort",
     "type": "png"
   });
-},696,[326],"res/images/my/ic_sort.png");
+},698,[326],"res/images/my/ic_sort.png");
 __d(function (global, _require, module, exports, _dependencyMap) {
   Object.defineProperty(exports, "__esModule", {
     value: true
@@ -95511,7 +95657,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
       marginLeft: 15
     }
   });
-},697,[118,130,12,637],"js/commonComponents/testPopover.js");
+},699,[118,130,12,639],"js/commonComponents/testPopover.js");
 __d(function (global, _require, module, exports, _dependencyMap) {
   module.exports = _require(_dependencyMap[0], "react-native/Libraries/Image/AssetRegistry").registerAsset({
     "__packager_asset": true,
@@ -95523,143 +95669,7 @@ __d(function (global, _require, module, exports, _dependencyMap) {
     "name": "ic_my",
     "type": "png"
   });
-},698,[326],"res/images/ic_my.png");
-__d(function (global, _require, module, exports, _dependencyMap) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-    var _reactNative = _require(_dependencyMap[0], "react-native");
-
-    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    var FAVORITE_KEY_REFIX = 'favorite_';
-
-    var FavoriteDao = function () {
-        function FavoriteDao(flag) {
-            _classCallCheck(this, FavoriteDao);
-
-            this.flag = flag;
-            this.favoriteKey = "" + FAVORITE_KEY_REFIX + flag;
-        }
-
-        _createClass(FavoriteDao, [{
-            key: "saveFavoriteItem",
-            value: function saveFavoriteItem(key, value, callback) {
-                var _this = this;
-
-                _reactNative.AsyncStorage.setItem(key, value, function (error) {
-                    if (!error) {
-                        _this.updateFavoriteKeys(key, true);
-                    }
-
-                    if (callback) {
-                        callback(!error ? '收藏项目成功' : '收藏项目失败');
-                    }
-                });
-            }
-        }, {
-            key: "removeFavoriteItem",
-            value: function removeFavoriteItem(key, callback) {
-                var _this2 = this;
-
-                _reactNative.AsyncStorage.removeItem(key, function (error) {
-                    if (!error) {
-                        _this2.updateFavoriteKeys(key, false);
-                    }
-
-                    if (callback) {
-                        callback(!error ? '取消收藏成功' : '取消收藏失败');
-                    }
-                });
-            }
-        }, {
-            key: "getFavoriteKeys",
-            value: function getFavoriteKeys() {
-                var _this3 = this;
-
-                return new Promise(function (resolve, reject) {
-                    _reactNative.AsyncStorage.getItem(_this3.favoriteKey, function (error, result) {
-                        if (!error) {
-                            try {
-                                resolve(JSON.parse(result));
-                            } catch (e) {
-                                reject(e);
-                            }
-                        } else {
-                            reject(error);
-                        }
-                    });
-                });
-            }
-        }, {
-            key: "updateFavoriteKeys",
-            value: function updateFavoriteKeys(key, isAdd) {
-                var _this4 = this;
-
-                _reactNative.AsyncStorage.getItem(this.favoriteKey, function (error, result) {
-                    console.log("[favorityKey]  " + _this4.favoriteKey);
-
-                    if (!error) {
-                        var favoriteKeys = [];
-
-                        if (result) {
-                            favoriteKeys = JSON.parse(result);
-                        }
-
-                        var index = favoriteKeys.indexOf(key);
-
-                        if (isAdd) {
-                            if (index === -1) favoriteKeys.push(key);
-                        } else {
-                            if (index !== -1) favoriteKeys.splice(index, 1);
-                        }
-
-                        _reactNative.AsyncStorage.setItem(_this4.favoriteKey, JSON.stringify(favoriteKeys));
-                    }
-                });
-            }
-        }]);
-
-        return FavoriteDao;
-    }();
-
-    exports.default = FavoriteDao;
-},700,[12],"js/expand/dao/FavoriteDao.js");
-__d(function (global, _require, module, exports, _dependencyMap) {
-    'use strict';
-
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-
-    var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-    function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-    var Utils = function () {
-        function Utils() {
-            _classCallCheck(this, Utils);
-        }
-
-        _createClass(Utils, null, [{
-            key: "checkFavorite",
-            value: function checkFavorite(item, items) {
-                return items.some(function (key) {
-                    return item.id.toString() === key;
-                });
-            }
-        }]);
-
-        return Utils;
-    }();
-
-    exports.default = Utils;
-},701,[],"js/utils/Utils.js");
+},700,[326],"res/images/ic_my.png");
 require(52);
 require(11);
 //# sourceMappingURL=index.map

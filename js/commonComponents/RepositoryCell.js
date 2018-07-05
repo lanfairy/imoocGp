@@ -26,8 +26,24 @@ export default class RepositoryCell extends Component{
     })
   };
   onPressFavorite = ()=>{
-    this.setFavoriteState(!this.state.isFavorite);
-    this.props.onFavorite(this.props.projectModel.item, !this.state.isFavorite);
+    // this.setFavoriteState(!this.state.isFavorite);
+    // this.props.onFavorite(this.props.projectModel.item, !this.state.isFavorite);
+    this.favoriteAction(this.props.projectModel.item, !this.state.isFavorite);
+  };
+  favoriteAction = (item, isFavorite)=>{
+    this.setFavoriteState(isFavorite);
+    this.props.onFavorite(item, isFavorite);
+  };
+
+  onSelectRepository=(projectModel)=>{
+    const {navigation} = this.props;
+    navigation.navigate('RepositoryDetail',{
+      projectModel: projectModel,
+      onFavorite: (item, isFavorite)=>{
+        this.favoriteAction(item, isFavorite);
+      },
+
+    });
   };
 
   render(){
@@ -45,7 +61,7 @@ export default class RepositoryCell extends Component{
       let TouchableElement = TouchableOpacity;
     return(
       <TouchableElement
-        onPress={()=>this.props.onSelected(this.props.projectModel)}
+        onPress={()=>this.onSelectRepository(this.props.projectModel)}
         onShowUnderlay={this.props.onHighlight}
         underlayColor='transparent'
         onHideUnderlay={this.props.onUnhighlight}

@@ -5,6 +5,8 @@ import {
   WebView,
   StyleSheet,
  } from 'react-native';
+
+
 import ViewUtils from '../utils/ViewUtils';
 import { ThemeFlags } from '../config/ThemeConfig';
 const WEBVIEW_REF = 'webview';
@@ -16,6 +18,7 @@ export default class RepositoryDetail extends Component {
       url: projectModel.item.html_url,
       canGoBack: false,
       isFavorite: projectModel.isFavorite,
+      item: projectModel.item,
     }
   }
   componentWillMount(){
@@ -25,6 +28,7 @@ export default class RepositoryDetail extends Component {
     });
   }
   render() {
+
     return (
       <View style={styles.flex}>
         <WebView 
@@ -66,7 +70,8 @@ export default class RepositoryDetail extends Component {
   };
   _onFavoriteProject = ()=>{
     this.setFavoriteState(!this.state.isFavorite);
-    // this.props.onFavorite(this.props.projectModel.item, !this.state.isFavorite);
+    if(this.props.navigation.getParam("onFavorite", null))
+    this.props.navigation.getParam("onFavorite")(this.state.item, !this.state.isFavorite);
   };
 }
 

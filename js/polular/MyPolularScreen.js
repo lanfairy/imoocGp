@@ -85,10 +85,24 @@ class PopularTab extends React.Component{
   componentWillUnmount(){
 
   }
-  onSelectRepository=(projectModel)=>{
-    const {navigation} = this.props;
-    navigation.navigate('RepositoryDetail',{projectModel: projectModel});
-  };
+  // onSelectRepository=(projectModel)=>{
+  //   const {navigation} = this.props;
+  //   navigation.navigate('RepositoryDetail',{
+  //     projectModel: projectModel,
+  //     onFavorite: (item, isFavorite)=>{
+  //       if(isFavorite){
+  //         favoriteDao.saveFavoriteItem(item.id.toString(),JSON.stringify(item),(tipText)=>{
+  //           this.refs.toast.show(tipText);
+  //         });
+  //       }else{
+  //         favoriteDao.removeFavoriteItem(item.id.toString(),(tipText)=>{
+  //           this.refs.toast.show(tipText);
+  //         });
+  //       }
+  //     },
+
+  //   });
+  // };
   onFavorite = (item, isFavorite)=>{
     if(isFavorite){
       favoriteDao.saveFavoriteItem(item.id.toString(),JSON.stringify(item),(tipText)=>{
@@ -104,8 +118,9 @@ class PopularTab extends React.Component{
     return(
       <RepositoryCell 
         projectModel={projectModel}
-        onSelected={this.onSelectRepository}
+        // onSelected={this.onSelectRepository}
         onFavorite={this.onFavorite}
+        {...this.props}
         />
     )
   };
