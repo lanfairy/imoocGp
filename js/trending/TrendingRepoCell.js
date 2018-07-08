@@ -29,21 +29,51 @@ export default class TrendingRepoCell extends Component {
     constructor(props){
         super(props);
         this.state = {
-            favoriteIcon:  require('../../res/images/ic_star.png'),
+            item: this.props.projectModel.item ? this.props.projectModel.item : this.props.projectModel,
+            isFavorite: this.props.projectModel.isFavorite,
+            favoriteIcon: this.props.projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png'),
         }
     }
-    onPressFavorite(){
-
+    onPressFavorite = ()=>{
+        this.favoriteAction(this.props.projectModel.item, !this.state.isFavorite);
     }
+    setFavoriteState = (isFavorite)=>{
+        this.setState({
+          isFavorite: isFavorite,
+          favoriteIcon: isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png'),
+        })
+      };
+    favoriteAction = (item, isFavorite)=>{
+        this.setFavoriteState(isFavorite);
+        this.props.onFavorite(item, isFavorite);
+    };
+    onSelectRepository=(projectModel)=>{
+        const {navigation} = this.props;
+        navigation.navigate('trendingDetailPage',{
+          projectModel: projectModel,
+          onFavorite: (item, isFavorite)=>{
+            this.favoriteAction(item, isFavorite);
+          },
     
+        });
+      };
   render() {
-    let item = this.props.rowData;
+    let item = this.state.item;
     let description = `<p>${item.description}</p>`;
-    let TouchableElement = TouchableHighlight;
-    
+    let TouchableElement = TouchableOpacity;
+    let favoriteButton=
+            <TouchableOpacity
+                style={{padding:6}}
+                onPress={this.onPressFavorite} 
+                underlayColor='transparent'>
+                <Image
+                    ref='favoriteIcon'
+                    style={[{width: 22, height: 22, },{tintColor: '#2196F3'}]}
+                    source={this.state.favoriteIcon}/>
+            </TouchableOpacity>;
     return (
     <TouchableElement 
-        onPress={this.props.onSelect}
+        onPress={()=>this.onSelectRepository(this.props.projectModel)}
         // onShowUnderlay={this.props.onHighlight}
         // onHideUnderlay={this.props.onUnhighlight}
         activeOpacity={0.2}
@@ -77,13 +107,7 @@ export default class TrendingRepoCell extends Component {
                     })
                 }
             </View>
-            <TouchableHighlight
-                style={{padding: 6,}} 
-                onPress={()=>this.onPressFavorite()} 
-                underlayColor='transparent'
-             >
-                <Image source={this.state.favoriteIcon} style={{width:22, height:22}}/>
-            </TouchableHighlight>
+            {favoriteButton}
         </View>
       </View>
     </TouchableElement>

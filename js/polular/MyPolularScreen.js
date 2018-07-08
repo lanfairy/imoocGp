@@ -172,7 +172,7 @@ class PopularTab extends React.Component{
                     this.items = result&&result.items ? result.items : result ? result : [];
                     this.getFavoriteKeys();
                     console.log(`----- 瞬瞬 ${result.date}`);
-                    if(result&&result.date&&dataRepository.checkDate(result.date)){
+                    if(this.items&&result.date&&dataRepository.checkDate(result.date)){
                       console.log(`----- 重新获取网络数据 `);
                       return dataRepository.fetchNetRepository(URL);
                     }

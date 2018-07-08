@@ -10,12 +10,16 @@ import {
 import ViewUtils from '../utils/ViewUtils';
 import { ThemeFlags } from '../config/ThemeConfig';
 const WEBVIEW_REF = 'webview';
+const TRENDING_URL = 'https://github.com/';
 export default class RepositoryDetail extends Component {
   constructor(props){
     super(props);
     let projectModel = this.props.navigation.getParam('projectModel');
+    let url = projectModel.item.html_url ? projectModel.item.html_url
+            : TRENDING_URL + projectModel.item.fullName;
+
     this.state={
-      url: projectModel.item.html_url,
+      url: url,
       canGoBack: false,
       isFavorite: projectModel.isFavorite,
       item: projectModel.item,
@@ -83,7 +87,8 @@ RepositoryDetail.navigationOptions = props => {
   const { state, setParams } = navigation;
   const { params } = state;
   let projectModel = navigation.getParam('projectModel');
-  let title = projectModel.item.full_name;
+  let title = projectModel.item.full_name ? projectModel.item.full_name
+  : projectModel.item.fullName;
   let favoriteIcon = (projectModel.isFavorite ? require('../../res/images/ic_star.png') : require('../../res/images/ic_unstar_transparent.png'));
   favoriteIcon = navigation.getParam('favoriteIcon', favoriteIcon);
   return {

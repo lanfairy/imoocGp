@@ -6,7 +6,7 @@ export default class Utils {
      * 检查该Item是否被收藏
      * **/
    static checkFavorite(item, items){
-
-        return items.some((key)=> item.id.toString() === key);
+       let id = item.id ? item.id : item.fullName;
+        return items.some((key)=> id.toString() === key);
     }
 }

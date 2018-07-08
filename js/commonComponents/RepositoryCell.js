@@ -37,6 +37,7 @@ export default class RepositoryCell extends Component{
 
   onSelectRepository=(projectModel)=>{
     const {navigation} = this.props;
+    projectModel.isFavorite = this.state.isFavorite;
     navigation.navigate('RepositoryDetail',{
       projectModel: projectModel,
       onFavorite: (item, isFavorite)=>{

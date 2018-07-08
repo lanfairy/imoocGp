@@ -9,11 +9,11 @@ import {
   DeviceEventEmitter,
   StyleSheet
 } from 'react-native';
-// import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation';
 import Popover, { createPopoverStackNavigator, Rect, Size } from 'react-native-popover-view'; 
 import MyTrendingScreen from './MyTrendingScreen';
 import { ThemeFlags } from '../config/ThemeConfig';
-import WebViewPage from './WebViewPage';
+import RepositoryDetail from '../polular/RepositoryDetail';
 import TimeSpan from '../mode/TimeSpan';
 
 var timeSpanTextArray = [new TimeSpan('今 天', 'since=daily'),
@@ -41,15 +41,7 @@ class TitleView extends React.Component {
     )
   }
 }
-// const MyTrendingStack = createStackNavigator({
-//   TrendingHome: {
-//     screen: MyTrendingScreenWarp,
-//   },
-//   webViewPage: {
-//     screen: WebViewPage,
-//   }
 
-// });
 const MyTrendingScreenWrap = createPopoverStackNavigator({
   MyTrendingScreen: {
     screen: MyTrendingScreen,
@@ -72,6 +64,9 @@ const MyTrendingScreenWrap = createPopoverStackNavigator({
       }
     })
   },
+    trendingDetailPage: {
+    screen: RepositoryDetail,
+  },
   TitleView: {
     screen: TitleView,
     // navigationOptions: {title: 'TitleView'},
@@ -84,9 +79,6 @@ const MyTrendingScreenWrap = createPopoverStackNavigator({
       }
     }
   },
-  webViewPage: {
-    screen: WebViewPage,
-  }
 });
 
 class MyTrendingStack extends React.Component {
@@ -105,6 +97,15 @@ class MyTrendingStack extends React.Component {
     );
   }
 }
+// const MyTrendingStack = createStackNavigator({
+//   TrendingHome: {
+//     screen: MyTrendingHome,
+//   },
+//   trendingDetailPage: {
+//     screen: RepositoryDetail,
+//   }
+
+// });
 MyTrendingStack.navigationOptions = ({navigation})=> {
   let tabBarVisible = true;
   if(navigation.state.index > 0)
